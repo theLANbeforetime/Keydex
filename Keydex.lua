@@ -9,7 +9,6 @@ function getDate()
 end
 
 -- Get Player Data
-
 function getPlayerInformation(arg)
     local sentRequest = openRaidLib.RequestAllData()
     local unitInfo = openRaidLib.GetUnitInfo("player")
@@ -24,8 +23,7 @@ function getPlayerInformation(arg)
     return playerTable[arg]
  end 
 
- -- Get key information 
-
+-- Get Weekly Affixes
 function getWeeklyAffixes(arg)
     local RequestMapInfo = C_MythicPlus.RequestMapInfo()
     local affixes = C_MythicPlus.GetCurrentAffixes()
@@ -80,6 +78,88 @@ function getWeeklyAffixes(arg)
     return r_affixes[arg]
 end
  
+-- Get Active Key Level
+function getCurrentKeyLevel()
+    local activeKeystoneLevel, activeAffixIDs, wasActiveKeystoneCharged = C_ChallengeMode.GetActiveKeystoneInfo()
+    return activeKeystoneLevel
+end
+
+-- Get Active Key Map
+function getCurrentMap()
+    local mapChallengeModeID = C_ChallengeMode.GetActiveChallengeMapID()
+return  mapChallengeModeID
+end
+
+-- Translate Key Map ID to Dungeon Name
+function translateMapID(arg)
+    -- List of Current Challenge Maps pulled from WoW Tools (https://wow.tools/dbc/?dbc=mapchallengemode&build=10.0.5.47660#page=1)
+    local dungeonNameTable = {
+        2526	=	"Algeth'ar Academy",
+        1763	=	"Atal'Dazar",
+        1182	=	"Auchindoun",
+        1501	=	"Black Rook Hold",
+        1175	=	"Bloodmaul Slag Mines",
+        2520	=	"Brackenhide Hollow",
+        1677	=	"Cathedral of Eternal Night",
+        1571	=	"Court of Stars",
+        1466	=	"Darkheart Thicket",
+        2291	=	"De Other Side",
+        1456	=	"Eye of Azshara",
+        1754	=	"Freehold",
+        962	    =	"Gate of the Setting Sun",
+        1208	=	"Grimrail Depot",
+        2287	=	"Halls of Atonement",
+        2527	=	"Halls of Infusion",
+        1477	=	"Halls of Valor",
+        1195	=	"Iron Docks",
+        1762	=	"Kings' Rest",
+        1492	=	"Maw of Souls",
+        2290	=	"Mists of Tirna Scithe",
+        994	    =	"Mogu'shan Palace",
+        1458	=	"Neltharion's Lair",
+        2519	=	"Neltharus",
+        2097	=	"Operation: Mechagon - Junkyard",
+        2097	=	"Operation: Mechagon - Workshop",
+        2289	=	"Plaguefall",
+        1651	=	"Return to Karazhan: Lower",
+        1651	=	"Return to Karazhan: Upper",
+        2521	=	"Ruby Life Pools",
+        2284	=	"Sanguine Depths",
+        1001	=	"Scarlet Halls",
+        1004	=	"Scarlet Monastery",
+        1007	=	"Scholomance",
+        1753	=	"Seat of the Triumvirate",
+        959	    =	"Shado-Pan Monastery",
+        1176	=	"Shadowmoon Burial Grounds",
+        1864	=	"Shrine of the Storm",
+        1822	=	"Siege of Boralus",
+        1011	=	"Siege of Niuzao Temple",
+        1209	=	"Skyreach",
+        2285	=	"Spires of Ascension",
+        961	    =	"Stormstout Brewery",
+        2441	=	"Tazavesh: So'leah's Gambit",
+        2441	=	"Tazavesh: Streets of Wonder",
+        1877	=	"Temple of Sethraliss",
+        960	    =	"Temple of the Jade Serpent",
+        1516	=	"The Arcway",
+        2515	=	"The Azure Vault",
+        1279	=	"The Everbloom",
+        1594	=	"The MOTHERLODE!!",
+        2286	=	"The Necrotic Wake",
+        2516	=	"The Nokhud Offensive",
+        1841	=	"The Underrot",
+        2293	=	"Theater of Pain",
+        1771	=	"Tol Dagor",
+        2451	=	"Uldaman: Legacy of Tyr",
+        1358	=	"Upper Blackrock Spire",
+        1493	=	"Vault of the Wardens",
+        1862	=	"Waycrest Manor"
+    }
+
+    
+    return dungeonNameTable[arg]
+end
+
  -- Create structure to store data that will be copied.
  -- TODO: Make this dynamic so players can choose how they want to structure 
  -- own data in CSV format.
@@ -114,13 +194,6 @@ end
 -- CHALLENGE_MODE_RESET: mapID
 -- CHALLENGE_MODE_START: mapID
 
-
--- Function Get Weekly Affixes ()
-
--- local function RequestMythicPlusData()
---     C_MythicPlus.RequestCurrentAffixes()
---     C_MythicPlus.RequestMapInfo()
---  end
 
 -- Function Get_Dungeon()
 --  On key start get Dungeon Name
@@ -211,7 +284,7 @@ end
 local frame = CreateFrame("FRAME", "KeydexAddonFrame");
 frame:RegisterEvent("CHALLENGE_MODE_START");
 local function eventHandler(self, event, ...)
- print(getDate(), getPlayerInformation("playeriLevel"));
+ print(getDate(), getPlayerInformation("playeriLevel"), getWeeklyAffixes(1), getWeeklyAffixes(2), getWeeklyAffixes(3), getWeeklyAffixes(4), getCurrentMap(), getCurrentKeyLevel());
 end
 frame:SetScript("OnEvent", eventHandler);
 
@@ -238,14 +311,18 @@ StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {
 --     -- do whatever you want with it
 -- end,
 -- hasEditBox = true
+
+
+
  -- SLASH COMMANDS FOR TESTING
  SLASH_KEY1, SLASH_KEY2 = '/key', "/keydex";
 function SlashCmdList.KEY(msg, editBox)
 
     if msg then msg = string.lower( msg ); end
-
     --if msg == "test" then
         -- StaticPopup_Show ("KEYDEX_COPYWINDOW")
+        
+    -- TESTING OF FUNCTIONS
         print(getDate())
         print(getPlayerInformation("playeriLevel"))
         print(getPartyInformation("partyName"))
@@ -259,6 +336,9 @@ function SlashCmdList.KEY(msg, editBox)
         print(getWeeklyAffixes(2))
         print(getWeeklyAffixes(3))
         print(getWeeklyAffixes(4))
+        print(getCurrentMap())
+        print(getCurrentKeyLevel())
+        print(translateMapID(1877))
     --end 
 end
 
