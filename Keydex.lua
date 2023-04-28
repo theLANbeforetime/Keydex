@@ -87,100 +87,139 @@ end
 -- Get Active Key Map
 function getCurrentMap()
     local mapChallengeModeID = C_ChallengeMode.GetActiveChallengeMapID()
+    if mapChallengeModeID == 0 then
+        mapChallengeModeID = 9999
+    elseif mapChallengeModeID == nil then
+        mapChallengeModeID  = 9999
+    end
 return  mapChallengeModeID
 end
 
 -- Translate Key Map ID to Dungeon Name
 function translateMapID(arg)
     -- List of Current Challenge Maps pulled from WoW Tools (https://wow.tools/dbc/?dbc=mapchallengemode&build=10.0.5.47660#page=1)
-    local dungeonNameTable = {
-        2526	=	"Algeth'ar Academy",
-        1763	=	"Atal'Dazar",
-        1182	=	"Auchindoun",
-        1501	=	"Black Rook Hold",
-        1175	=	"Bloodmaul Slag Mines",
-        2520	=	"Brackenhide Hollow",
-        1677	=	"Cathedral of Eternal Night",
-        1571	=	"Court of Stars",
-        1466	=	"Darkheart Thicket",
-        2291	=	"De Other Side",
-        1456	=	"Eye of Azshara",
-        1754	=	"Freehold",
-        962	    =	"Gate of the Setting Sun",
-        1208	=	"Grimrail Depot",
-        2287	=	"Halls of Atonement",
-        2527	=	"Halls of Infusion",
-        1477	=	"Halls of Valor",
-        1195	=	"Iron Docks",
-        1762	=	"Kings' Rest",
-        1492	=	"Maw of Souls",
-        2290	=	"Mists of Tirna Scithe",
-        994	    =	"Mogu'shan Palace",
-        1458	=	"Neltharion's Lair",
-        2519	=	"Neltharus",
-        2097	=	"Operation: Mechagon - Junkyard",
-        2097	=	"Operation: Mechagon - Workshop",
-        2289	=	"Plaguefall",
-        1651	=	"Return to Karazhan: Lower",
-        1651	=	"Return to Karazhan: Upper",
-        2521	=	"Ruby Life Pools",
-        2284	=	"Sanguine Depths",
-        1001	=	"Scarlet Halls",
-        1004	=	"Scarlet Monastery",
-        1007	=	"Scholomance",
-        1753	=	"Seat of the Triumvirate",
-        959	    =	"Shado-Pan Monastery",
-        1176	=	"Shadowmoon Burial Grounds",
-        1864	=	"Shrine of the Storm",
-        1822	=	"Siege of Boralus",
-        1011	=	"Siege of Niuzao Temple",
-        1209	=	"Skyreach",
-        2285	=	"Spires of Ascension",
-        961	    =	"Stormstout Brewery",
-        2441	=	"Tazavesh: So'leah's Gambit",
-        2441	=	"Tazavesh: Streets of Wonder",
-        1877	=	"Temple of Sethraliss",
-        960	    =	"Temple of the Jade Serpent",
-        1516	=	"The Arcway",
-        2515	=	"The Azure Vault",
-        1279	=	"The Everbloom",
-        1594	=	"The MOTHERLODE!!",
-        2286	=	"The Necrotic Wake",
-        2516	=	"The Nokhud Offensive",
-        1841	=	"The Underrot",
-        2293	=	"Theater of Pain",
-        1771	=	"Tol Dagor",
-        2451	=	"Uldaman: Legacy of Tyr",
-        1358	=	"Upper Blackrock Spire",
-        1493	=	"Vault of the Wardens",
-        1862	=	"Waycrest Manor"
-    }
-
+    local dungeonNameTable = {}
+    if arg ~= 9999 then
+        dungeonNameTable = {
+            [402]	=	"Algeth'ar Academy",
+            [244]	=	"Atal'Dazar",
+            [164]	=	"Auchindoun",
+            [199]	=	"Black Rook Hold",
+            [163]	=	"Bloodmaul Slag Mines",
+            [405]	=	"Brackenhide Hollow",
+            [233]	=	"Cathedral of Eternal Night",
+            [210]	=	"Court of Stars",
+            [198]	=	"Darkheart Thicket",
+            [377]	=	"De Other Side",
+            [197]	=	"Eye of Azshara",
+            [245]	=	"Freehold",
+            [57]	=	"Gate of the Setting Sun",
+            [166]	=	"Grimrail Depot",
+            [378]	=	"Halls of Atonement",
+            [406]	=	"Halls of Infusion",
+            [200]	=	"Halls of Valor",
+            [169]	=	"Iron Docks",
+            [249]	=	"Kings' Rest",
+            [208]	=	"Maw of Souls",
+            [375]	=	"Mists of Tirna Scithe",
+            [60]	=	"Mogu'shan Palace",
+            [206]	=	"Neltharion's Lair",
+            [404]	=	"Neltharus",
+            [369]	=	"Operation: Mechagon - Junkyard",
+            [370]	=	"Operation: Mechagon - Workshop",
+            [379]	=	"Plaguefall",
+            [227]	=	"Return to Karazhan: Lower",
+            [234]	=	"Return to Karazhan: Upper",
+            [399]	=	"Ruby Life Pools",
+            [380]	=	"Sanguine Depths",
+            [77]	=	"Scarlet Halls",
+            [78]	=	"Scarlet Monastery",
+            [76]	=	"Scholomance",
+            [239]	=	"Seat of the Triumvirate",
+            [58]	=	"Shado-Pan Monastery",
+            [165]	=	"Shadowmoon Burial Grounds",
+            [252]	=	"Shrine of the Storm",
+            [353]	=	"Siege of Boralus",
+            [59]	=	"Siege of Niuzao Temple",
+            [161]	=	"Skyreach",
+            [381]	=	"Spires of Ascension",
+            [56]	=	"Stormstout Brewery",
+            [392]	=	"Tazavesh: So'leah's Gambit",
+            [391]	=	"Tazavesh: Streets of Wonder",
+            [250]	=	"Temple of Sethraliss",
+            [2]	=	"Temple of the Jade Serpent",
+            [209]	=	"The Arcway",
+            [401]	=	"The Azure Vault",
+            [168]	=	"The Everbloom",
+            [247]	=	"The MOTHERLODE!!",
+            [376]	=	"The Necrotic Wake",
+            [400]	=	"The Nokhud Offensive",
+            [251]	=	"The Underrot",
+            [382]	=	"Theater of Pain",
+            [246]	=	"Tol Dagor",
+            [403]	=	"Uldaman: Legacy of Tyr",
+            [167]	=	"Upper Blackrock Spire",
+            [207]	=	"Vault of the Wardens",
+            [402]	=	"Waycrest Manor",
+        }
+    else dungeonNameTable[arg] = "NoData"
+    end
     
     return dungeonNameTable[arg]
 end
 
+-- Returns TimeLimit of the Key in Seconds
+function getKeyTimeLimit()
+    local map = C_ChallengeMode.GetCompletionInfo()
+    local name, id, timeLimit = C_ChallengeMode.GetMapUIInfo(getCurrentMap())
+
+    return timeLimit
+end
+
+
+
+function escapeCSV(s)
+    if string.find(s, '[,"]') then
+      s = '"' .. string.gsub(s, '"', '""') .. '"'
+    end
+    return s
+  end
+
+function toCSV(tt)
+    local s = ""
+  -- ChM 23.02.2014: changed pairs to ipairs 
+  -- assumption is that fromCSV and toCSV maintain data as ordered array
+    for _,p in ipairs(tt) do  
+      s = s .. "," .. escapeCSV(p)
+    end
+    return string.sub(s, 2)      -- remove first comma
+  end
+
+  
+
  -- Create structure to store data that will be copied.
  -- TODO: Make this dynamic so players can choose how they want to structure 
  -- own data in CSV format.
---  function csvDataStruct(arg)
---     sheetTable = {}
---     sheetTable[1] = getDate()
---     sheetTable[2] = getPlayerInformation("playerName")
---     sheetTable[3] = getKeyDungeonName()
---     sheetTable[4] = getKeyDungeonLevel()
---     sheetTable[5] = getWeeklyAffixes(1)
---     sheetTable[6] = getWeeklyAffixes(2)
---     sheetTable[7] = getWeeklyAffixes(3)
---     sheetTable[8] = getKeyCompletion()
---     sheetTable[9] = getGroupComposition("Tank")
---     sheetTable[10] = getGroupComposition("Healer")
---     sheetTable[11] = getGroupComposition("Dmg1")
---     sheetTable[12]= getGroupComposition("Dmg2")
---     sheetTable[13] = getGroupComposition("Dmg3")
---     sheetTable[14] = getQuickNote()
---     return sheetTable[arg]
---  end 
+ function csvDataStruct()
+    local sheetTable = {}
+    
+    sheetTable[1] = getDate()
+    sheetTable[2] = getPlayerInformation("playerName")
+    sheetTable[3] = translateMapID(getCurrentMap())
+    sheetTable[4] = getCurrentKeyLevel()
+    sheetTable[5] = getWeeklyAffixes(1)
+    sheetTable[6] = getWeeklyAffixes(2)
+    sheetTable[7] = getWeeklyAffixes(3)
+    -- sheetTable[8] = getKeyCompletion()
+    -- sheetTable[9] = getGroupComposition("Tank")
+    -- sheetTable[10] = getGroupComposition("Healer")
+    -- sheetTable[11] = getGroupComposition("Dmg1")
+    -- sheetTable[12]= getGroupComposition("Dmg2")
+    -- sheetTable[13] = getGroupComposition("Dmg3")
+    -- sheetTable[14] = getQuickNote()
+    
+    return sheetTable
+ end 
 
 --  Events I need to add functions for:
 -- C_ChallengeMode
@@ -243,32 +282,10 @@ end
 -- --registering the callback:
 -- openRaidLib.RegisterCallback(MyAddonObject, "GearUpdate", "OnGearUpdate")
 
-function getPartyInformation(arg)
-    -- UnitID:
-    --UnitID use: "player", "target", "raid18", "party3", etc...
-    --If passing the unit name, use GetUnitName(unitId, true) or Ambiguate(playerName, 'none')
+function getPartyInformation(partyNum, ...)
 
-    -- unitInfo = {
-    --     .specId = number
-    --     .specName = string
-    --     .role = string
-    --     .renown = number
-    --     .covenantId = number
-    --     .talents = {talentId, talentId, talentId, ...}
-    --     .pvpTalents = {talentId, talentId, talentId}
-    --     .conduits = {spellId, conduitLevel, spellId, conduitLevel, spellId, conduitLevel, ...}
-    --     .class = string class eng name 'ROGUE'
-    --     .classId = number
-    --     .className = string class localized name
-    --     .name = string name without realm
-    --     .nameFull = string name with realm 'unitName-ServerName'
-    -- }
-    -- Get Party Members Information
-    -- local allPlayersGear = openRaidLib.GetAllUnitsGear()
-    -- local allUnitsInfo = openRaidLib.GetAllUnitsInfo()
-
-    local unitInfo = openRaidLib.GetUnitInfo("party1")
-    local playerGear = openRaidLib.GetUnitGear("party1")
+    local unitInfo = openRaidLib.GetUnitInfo(partyNum)
+    local playerGear = openRaidLib.GetUnitGear(partyNum)
 
     partyTable = {}
     if unitInfo ~= nil then
@@ -276,8 +293,8 @@ function getPartyInformation(arg)
         partyTable["partyRole"] = unitInfo.role
         partyTable["partySpecName"] = unitInfo.specName
         partyTable["partyiLevel"] = playerGear.ilevel
-    else partyTable[arg] = "unknown" end
-    return partyTable[arg]
+    else partyTable[...] = "unknown" end
+    return partyTable[...]
 
 end
 
@@ -294,7 +311,7 @@ StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {
     button1 = "Done",
     button2 = "Cancel",
     OnShow = function (self, data)
-        self.editBox:SetText(csvOutputTxt)
+        self.editBox:SetText(toCSV(csvDataStruct()))
     end,
     timeout = 0,
     hasEditBox = true,
@@ -315,30 +332,26 @@ StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {
 
 
  -- SLASH COMMANDS FOR TESTING
- SLASH_KEY1, SLASH_KEY2 = '/key', "/keydex";
+ SLASH_KEY1, SLASH_KEY2 = '/keyd', "/keydex";
 function SlashCmdList.KEY(msg, editBox)
 
     if msg then msg = string.lower( msg ); end
     --if msg == "test" then
-        -- StaticPopup_Show ("KEYDEX_COPYWINDOW")
-        
+         StaticPopup_Show ("KEYDEX_COPYWINDOW")
+
     -- TESTING OF FUNCTIONS
-        print(getDate())
-        print(getPlayerInformation("playeriLevel"))
-        print(getPartyInformation("partyName"))
-        print(getPartyInformation("partySpecName"))
-        print(getPartyInformation("partyRole"))
-        print(getPartyInformation("partyiLevel"))
-        -- print(getPlayerInformation("partyOne"))
-        -- print(getPlayerInformation("specName"))
-        -- print(getPlayerInformation("roundedEquipped")) 
-        print(getWeeklyAffixes(1))
-        print(getWeeklyAffixes(2))
-        print(getWeeklyAffixes(3))
-        print(getWeeklyAffixes(4))
+        print("Current date is: ", getDate())
+        print("Your Item Level is: ", getPlayerInformation("playeriLevel"))
+        print("Weekly Affixes are: ", getWeeklyAffixes(1), getWeeklyAffixes(2), getWeeklyAffixes(3), getWeeklyAffixes(4))
+        print("Current Key Level: ", getCurrentKeyLevel())
+        print("Current Map is: ", translateMapID(getCurrentMap()))
         print(getCurrentMap())
-        print(getCurrentKeyLevel())
-        print(translateMapID(1877))
+        print("Party One Information: ", getPartyInformation("party1", "partyName", "partyRole", "partySpecName", "partyiLevel"))
+        print("Party Two Information: ", getPartyInformation("party2", "partyName", "partyRole", "partySpecName", "partyiLevel"))
+        print("Party Three Information: ", getPartyInformation("party3", "partyName", "partyRole", "partySpecName", "partyiLevel"))
+        print("Party Four Information: ", getPartyInformation("party4", "partyName", "partyRole", "partySpecName", "partyiLevel"))
+        -- print(getKeyCompletion())
+        print(getKeyTimeLimit())
     --end 
 end
 
