@@ -1,0 +1,11 @@
+## Interface: 100007
+## Title: Keydex
+## Notes: Add-On to easily port Mythic+ Key Information.
+## Version: 0.0.1
+## Author: Ardryst
+
+#Libs
+libs\libs.xml
+
+#Main
+Keydex.lua
