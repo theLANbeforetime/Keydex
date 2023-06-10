@@ -8,9 +8,70 @@ function getDate()
     return currentDate
 end
 
+function initKeyInfo()
+    C_MythicPlus.RequestMapInfo()
+end
+
+function initRaidLib()
+    openRaidLib.RequestAllData()
+end
+
+function initAffixInfo()
+    local affixes = C_MythicPlus.GetCurrentAffixes()
+    return affixes
+end
+
+-- Function takes in player role and sets them in order of TANK - HEALER - DAMAGER - DAMAGER - DAMAGER
+-- 
+
+function determinePartyRole(partyNum)
+    initRaidLib()
+    local role = getPartyInformation(partyNum, "partyRole")
+    local spec = getPartyInformation(partyNum, "partySpecName")
+    local partyRoleSpec = {role, spec}
+    return partyRoleSpec
+end
+
+function determinePlayerRole()
+    initRaidLib()
+    local role = getPlayerInformation("playerRole")
+    local spec = getPlayerInformation("playerSpec")
+    local playerRoleSpec = {role, spec}
+    return playerRoleSpec
+end
+
+-- Sort Party and get Specs
+function sortPartyRolesAndSpec(selector)
+    local party1 = determinePartyRole("party1")
+    local party2 = determinePartyRole("party2")
+    local party3 = determinePartyRole("party3")
+    local party4 = determinePartyRole("party4")
+    local player = determinePlayerRole()
+
+    unsortedPartyTable = {party1, party2, party3, party4, player}
+    sortedPartyTable = {}
+    
+    for pnum = 1,5 do
+        if unsortedPartyTable[pnum][1] == "TANK" then
+            sortedPartyTable.tank = unsortedPartyTable[pnum][2]
+        elseif unsortedPartyTable[pnum][1] == "HEALER" then
+            sortedPartyTable.healer = unsortedPartyTable[pnum][2]
+        elseif unsortedPartyTable[pnum][1] == "DAMAGER" then
+            if sortedPartyTable.dps1 == nil then
+                sortedPartyTable.dps1 = unsortedPartyTable[pnum][2]
+            elseif sortedPartyTable.dps2 == nil then
+                sortedPartyTable.dps2 = unsortedPartyTable[pnum][2]
+            elseif sortedPartyTable.dps3 == nil then
+                sortedPartyTable.dps3 = unsortedPartyTable[pnum][2]
+            end
+        end
+    end
+    return sortedPartyTable[selector]
+end
+
 -- Get Player Data
 function getPlayerInformation(arg)
-    local sentRequest = openRaidLib.RequestAllData()
+    initRaidLib()
     local unitInfo = openRaidLib.GetUnitInfo("player")
     local playerGear = openRaidLib.GetUnitGear("player")
 
@@ -21,14 +82,13 @@ function getPlayerInformation(arg)
     playerTable["playerSpec"] = unitInfo.specName
 
     return playerTable[arg]
- end 
+end 
 
 -- Get Weekly Affixes
 function getWeeklyAffixes(arg)
-    local RequestMapInfo = C_MythicPlus.RequestMapInfo()
-    local affixes = C_MythicPlus.GetCurrentAffixes()
+    initKeyInfo()
+    local affixes = initAffixInfo()
     local r_affixes = {}
-    -- Pull first three affixes; after 10.1 will likely have to re-evaluate best way to pull affixes.
     for i=1,3 do
         for k,v in pairs(affixes[i]) do
             if v ~= 0 then
@@ -37,44 +97,53 @@ function getWeeklyAffixes(arg)
                     r_affixes[1] = "Tyrannical" 
                 elseif v == 10 then 
                     r_affixes[1] = "Fortified" 
-                -- Level 4 Affixes
-                elseif v == 5 then 
-                    r_affixes[2] = "Teeming" 
-                elseif v == 6 then 
-                    r_affixes[2] = "Raging" 
-                elseif v == 7 then 
-                    r_affixes[2] = "Bolstering" 
-                elseif v == 8 then 
-                    r_affixes[2] = "Sanguine"
-                elseif v == 11 then 
-                    r_affixes[2]  = "Bursting" 
-                elseif v == 122 then 
-                    r_affixes[2] = "Inspiring" 
-                elseif v == 123 then 
-                    r_affixes[2] = "Spiteful" 
                 -- Level 7 Affixes
+                elseif v == 134 then 
+                    r_affixes[2] = "Entangling"
+                elseif v == 135 then 
+                    r_affixes[2] = "Afflicted"
+                elseif v == 136 then 
+                    r_affixes[2] = "Incorporeal"
+                elseif v == 124 then 
+                    r_affixes[2] = "Storming"
+                elseif v == 3 then 
+                    r_affixes[2] = "Volcanic"   
+                -- Level 14 Affixes
+                elseif v == 7 then 
+                    r_affixes[3] = "Bolstering"
+                elseif v == 11 then 
+                    r_affixes[3]  = "Bursting"
+                elseif v == 6 then 
+                    r_affixes[3] = "Raging"
+                elseif v == 8 then 
+                    r_affixes[3] = "Sanguine" 
                 elseif v == 13 then 
                     r_affixes[3] = "Explosive" 
-                elseif v == 3 then 
-                    r_affixes[3] = "Volcanic" 
-                elseif v == 12 then 
-                    r_affixes[3] = "Grievous" 
-                elseif v == 124 then 
-                    r_affixes[3] = "Storming" 
-                elseif v == 14 then 
-                    r_affixes[3] = "Quaking" 
-                elseif v == 4 then 
-                    r_affixes[3] = "Necrotic"
-                elseif v == 1 then 
-                    r_affixes[3] = "Overflowing" 
-                elseif v == 2 then 
-                    r_affixes[3] = "Skitish"
+                elseif v == 123 then 
+                    r_affixes[3] = "Spiteful"
+
+
+                -- Affixes Currently Out of Band
+                -- elseif v == 12 then 
+                --     r_affixes[3] = "Grievous"
+                -- elseif v == 5 then 
+                --     r_affixes[2] = "Teeming"   
+                -- elseif v == 122 then 
+                --     r_affixes[2] = "Inspiring"  
+                -- elseif v == 14 then 
+                --     r_affixes[3] = "Quaking" 
+                -- elseif v == 4 then 
+                --     r_affixes[3] = "Necrotic"
+                -- elseif v == 1 then 
+                --     r_affixes[3] = "Overflowing" 
+                -- elseif v == 2 then 
+                --     r_affixes[3] = "Skitish"
                 end
             end
         end
     end
-    -- Level 10 Affix
-    r_affixes[4] = "Thundering"
+    -- -- Level 10 Affix Not in PLay
+    -- r_affixes[4] = "Thundering"
     return r_affixes[arg]
 end
  
@@ -92,14 +161,14 @@ function getCurrentMap()
     elseif mapChallengeModeID == nil then
         mapChallengeModeID  = 9999
     end
-return  mapChallengeModeID
+    return  mapChallengeModeID
 end
 
 -- Translate Key Map ID to Dungeon Name
-function translateMapID(arg)
+function translateMapID(mapId)
     -- List of Current Challenge Maps pulled from WoW Tools (https://wow.tools/dbc/?dbc=mapchallengemode&build=10.0.5.47660#page=1)
     local dungeonNameTable = {}
-    if arg ~= 9999 then
+    if mapId ~= 9999 then
         dungeonNameTable = {
             [402]	=	"Algeth'ar Academy",
             [244]	=	"Atal'Dazar",
@@ -162,10 +231,10 @@ function translateMapID(arg)
             [207]	=	"Vault of the Wardens",
             [402]	=	"Waycrest Manor",
         }
-    else dungeonNameTable[arg] = "NoData"
+    else dungeonNameTable[mapId] = "NoData"
     end
     
-    return dungeonNameTable[arg]
+    return dungeonNameTable[mapId]
 end
 
 -- Returns TimeLimit of the Key in Seconds
@@ -176,14 +245,12 @@ function getKeyTimeLimit()
     return timeLimit
 end
 
-
-
 function escapeCSV(s)
     if string.find(s, '[,"]') then
       s = '"' .. string.gsub(s, '"', '""') .. '"'
     end
     return s
-  end
+end
 
 function toCSV(tt)
     local s = ""
@@ -193,7 +260,7 @@ function toCSV(tt)
       s = s .. "," .. escapeCSV(p)
     end
     return string.sub(s, 2)      -- remove first comma
-  end
+end
 
   
 
@@ -201,6 +268,7 @@ function toCSV(tt)
  -- TODO: Make this dynamic so players can choose how they want to structure 
  -- own data in CSV format.
  function csvDataStruct()
+    initKeyInfo()
     local sheetTable = {}
     
     sheetTable[1] = getDate()
@@ -211,15 +279,15 @@ function toCSV(tt)
     sheetTable[6] = getWeeklyAffixes(2)
     sheetTable[7] = getWeeklyAffixes(3)
     -- sheetTable[8] = getKeyCompletion()
-    -- sheetTable[9] = getGroupComposition("Tank")
-    -- sheetTable[10] = getGroupComposition("Healer")
-    -- sheetTable[11] = getGroupComposition("Dmg1")
-    -- sheetTable[12]= getGroupComposition("Dmg2")
-    -- sheetTable[13] = getGroupComposition("Dmg3")
+    -- sheetTable[9] = getGroupComposition("tank")
+    -- sheetTable[10] = getGroupComposition("healer")
+    -- sheetTable[11] = getGroupComposition(1)
+    -- sheetTable[12]= getGroupComposition(2)
+    -- sheetTable[13] = getGroupComposition(3)
     -- sheetTable[14] = getQuickNote()
     
     return sheetTable
- end 
+end 
 
 --  Events I need to add functions for:
 -- C_ChallengeMode
@@ -234,56 +302,8 @@ function toCSV(tt)
 -- CHALLENGE_MODE_START: mapID
 
 
--- Function Get_Dungeon()
---  On key start get Dungeon Name
--- Return Dungeon Name
-
--- Function Get Key Level ()
---  On key start get Key Level
--- Return Key Level
-
--- Function Get Player Data ()
--- On key start
---  Get Name
---  Get Class
---  Get Spec
---  Get iLvl
--- Return Name, Class, Spec, iLvl
-
--- Function Get Party Data ()
--- GetSpecializationInfoByID(spec)
--- partyOne = {}
--- partyTwo = {}
--- On key start
---  For member in party:
---      Get Name ~> 
---      Get Class
---      Get Spec
---      Get iLvl
--- Return Party NumArray
-
--- Function Spec Sort ()
-
--- function MyAddonObject.OnGearUpdate(unitId, unitGear, allUnitsGear)
---     local itemLevelNumber = unitGear.ilevel
---     local durabilityNumber = unitGear.durability
---     --hasWeaponEnchant is 1 have enchant or 0 is don't
---     local hasWeaponEnchantNumber = unitGear.weaponEnchant
---     local noEnchantTable = unitGear.noEnchants
---     local noGemsTable = unitGear.noGems
-
---     for index, slotIdWithoutEnchant in ipairs(noEnchantTable) do
---     end
-
---     for index, slotIdWithEmptyGemSocket in ipairs(noGemsTable) do
---     end
--- end
-
--- --registering the callback:
--- openRaidLib.RegisterCallback(MyAddonObject, "GearUpdate", "OnGearUpdate")
-
 function getPartyInformation(partyNum, ...)
-
+    initRaidLib()
     local unitInfo = openRaidLib.GetUnitInfo(partyNum)
     local playerGear = openRaidLib.GetUnitGear(partyNum)
 
@@ -298,10 +318,31 @@ function getPartyInformation(partyNum, ...)
 
 end
 
+
 local frame = CreateFrame("FRAME", "KeydexAddonFrame");
 frame:RegisterEvent("CHALLENGE_MODE_START");
 local function eventHandler(self, event, ...)
- print(getDate(), getPlayerInformation("playeriLevel"), getWeeklyAffixes(1), getWeeklyAffixes(2), getWeeklyAffixes(3), getWeeklyAffixes(4), getCurrentMap(), getCurrentKeyLevel());
+ print(
+    -- Date
+    getDate(), 
+    -- Name
+    getPlayerInformation("playerName"),
+    -- Dungeon
+    getCurrentMap(),  
+    -- Key Level
+    getCurrentKeyLevel(),
+    -- Weekly Affixes 
+    getWeeklyAffixes(1), 
+    getWeeklyAffixes(2), 
+    getWeeklyAffixes(3),
+    -- TODO: Result (Depleted/Timed/Abandon)
+    -- Party Roster (Tank/Healer/DPS)
+    sortPartyRolesAndSpec("tank"),
+    sortPartyRolesAndSpec("healer"),
+    sortPartyRolesAndSpec("dps1"),
+    sortPartyRolesAndSpec("dps2"),
+    sortPartyRolesAndSpec("dps3"))
+    -- TODO: Note (Not sure if this should be implemented)
 end
 frame:SetScript("OnEvent", eventHandler);
 
@@ -330,7 +371,6 @@ StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {
 -- hasEditBox = true
 
 
-
  -- SLASH COMMANDS FOR TESTING
  SLASH_KEY1, SLASH_KEY2 = '/keyd', "/keydex";
 function SlashCmdList.KEY(msg, editBox)
@@ -342,16 +382,29 @@ function SlashCmdList.KEY(msg, editBox)
     -- TESTING OF FUNCTIONS
         print("Current date is: ", getDate())
         print("Your Item Level is: ", getPlayerInformation("playeriLevel"))
-        print("Weekly Affixes are: ", getWeeklyAffixes(1), getWeeklyAffixes(2), getWeeklyAffixes(3), getWeeklyAffixes(4))
-        print("Current Key Level: ", getCurrentKeyLevel())
-        print("Current Map is: ", translateMapID(getCurrentMap()))
-        print(getCurrentMap())
-        print("Party One Information: ", getPartyInformation("party1", "partyName", "partyRole", "partySpecName", "partyiLevel"))
-        print("Party Two Information: ", getPartyInformation("party2", "partyName", "partyRole", "partySpecName", "partyiLevel"))
-        print("Party Three Information: ", getPartyInformation("party3", "partyName", "partyRole", "partySpecName", "partyiLevel"))
-        print("Party Four Information: ", getPartyInformation("party4", "partyName", "partyRole", "partySpecName", "partyiLevel"))
+        print("Your Role is: ", getPlayerInformation("playerRole"))
+        print("Your Spec is: ", getPlayerInformation("playerSpec"))
+        -- print("Weekly Affixes are: ", getWeeklyAffixes(1), getWeeklyAffixes(2), getWeeklyAffixes(3))
+        -- print("Current Key Level: ", getCurrentKeyLevel())
+        -- print("Current Map is: ", translateMapID(getCurrentMap()))
+        -- print(getCurrentMap())
+        -- print("Party One Information: ", getPartyInformation("party1", "partyName", "partyRole", "partySpecName", "partyiLevel"))
+        -- print("Party One Role: ", getPartyInformation("party1", "partyRole"))
+        -- print("Party Two Information: ", getPartyInformation("party2", "partyName", "partyRole", "partySpecName", "partyiLevel"))
+        -- print("Party Comp 1: ", getGroupCompositionParty("tank"))
+        -- print("Party Comp 2: ", getGroupCompositionParty("healer"))
+        -- print("Party Comp 3: ", getGroupCompositionParty(1))
+        -- print("Party Comp 4: ", getGroupCompositionParty(2))
+        -- print("Party Comp 5: ", getGroupCompositionParty(3))
+        -- print("Party Three Information: ", getPartyInformation("party3", "partyName", "partyRole", "partySpecName", "partyiLevel"))
+        -- print("Party Four Information: ", getPartyInformation("party4", "partyName", "partyRole", "partySpecName", "partyiLevel"))
         -- print(getKeyCompletion())
-        print(getKeyTimeLimit())
+        print("Tank: ", sortPartyRolesAndSpec("tank"))
+        print("Healer: ", sortPartyRolesAndSpec("healer"))
+        print("DPS1: ", sortPartyRolesAndSpec("dps1"))
+        print("DPS2: ", sortPartyRolesAndSpec("dps2"))
+        print("DPS3: ", sortPartyRolesAndSpec("dps3"))
+        -- print(getKeyTimeLimit())
     --end 
 end
 
