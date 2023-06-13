@@ -1,0 +1,36 @@
+ -- UnitID:
+    --UnitID use: "player", "target", "raid18", "party3", etc...
+    --If passing the unit name, use GetUnitName(unitId, true) or Ambiguate(playerName, 'none')
+
+    -- unitInfo = {
+    --     .specId = number
+    --     .specName = string
+    --     .role = string
+    --     .renown = number
+    --     .covenantId = number
+    --     .talents = {talentId, talentId, talentId, ...}
+    --     .pvpTalents = {talentId, talentId, talentId}
+    --     .conduits = {spellId, conduitLevel, spellId, conduitLevel, spellId, conduitLevel, ...}
+    --     .class = string class eng name 'ROGUE'
+    --     .classId = number
+    --     .className = string class localized name
+    --     .name = string name without realm
+    --     .nameFull = string name with realm 'unitName-ServerName'
+    -- }
+    -- Get Party Members Information
+    -- local allPlayersGear = openRaidLib.GetAllUnitsGear()
+    -- local allUnitsInfo = openRaidLib.GetAllUnitsInfo()
+
+
+--  Events I need to add functions for:
+-- C_ChallengeMode
+-- CHALLENGE_MODE_COMPLETED
+-- CHALLENGE_MODE_DEATH_COUNT_UPDATED
+-- CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN
+-- CHALLENGE_MODE_KEYSTONE_SLOTTED: keystoneID
+-- CHALLENGE_MODE_LEADERS_UPDATE
+-- CHALLENGE_MODE_MAPS_UPDATE
+-- CHALLENGE_MODE_MEMBER_INFO_UPDATED
+-- CHALLENGE_MODE_RESET: mapID
+-- CHALLENGE_MODE_START: mapID
+
