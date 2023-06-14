@@ -34,3 +34,201 @@
 -- CHALLENGE_MODE_RESET: mapID
 -- CHALLENGE_MODE_START: mapID
 
+Trax = LibStub("AceAddon-3.0"):NewAddon("Trax", "AceConsole-3.0", "AceEvent-3.0")
+
+openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
+
+
+function Trax:OnInitialize()
+	self:Print("Testing Suite Loaded")
+end
+
+function Trax:OnEnable()
+    -- Called when addon is enabled.
+end
+
+function Trax:OnDisable()
+	-- Called when the addon is disabled.
+end
+
+-- Get Player Data
+function getPlayerInformation(arg)
+    local unitInfo = openRaidLib.GetUnitInfo("player")
+    local playerGear = openRaidLib.GetUnitGear("player")
+
+    playerTable = {}
+    playerTable["playerName"] = unitInfo.name
+    playerTable["playeriLevel"] = playerGear.ilevel
+    playerTable["playerRole"] = unitInfo.role
+    playerTable["playerSpec"] = unitInfo.specName
+
+    return playerTable[arg]
+end 
+-- Player Role
+function determinePlayerRole()
+    local role = getPlayerInformation("playerRole")
+    local spec = getPlayerInformation("playerSpec")
+    local playerRoleSpec = {role, spec}
+    return playerRoleSpec
+end
+
+function getPartyInformation(partyNum, ...)
+    local unitInfo = openRaidLib.GetUnitInfo(partyNum)
+    local playerGear = openRaidLib.GetUnitGear(partyNum)
+
+    partyTable = {}
+    if unitInfo ~= nil then
+        partyTable["partyName"] = unitInfo.name
+        partyTable["partyRole"] = unitInfo.role
+        partyTable["partySpecName"] = unitInfo.specName
+        partyTable["partyiLevel"] = playerGear.ilevel
+    else partyTable[...] = "unknown" end
+    return partyTable[...]
+
+end
+
+-- Function takes in player role and sets them in order of TANK - HEALER - DAMAGER - DAMAGER - DAMAGER
+function determinePartyRole(partyNum)
+    local role = getPartyInformation(partyNum, "partyRole")
+    local spec = getPartyInformation(partyNum, "partySpecName")
+    local partyRoleSpec = {role, spec}
+    return partyRoleSpec
+end
+
+function openRaidLib.OnUnitUpdate(unitId, unitInfo, allUnitsInfo)
+    for unitName, unitInfo in pairs(allUnitsInfo) do
+        local specId = unitInfo.specId
+        local specName = unitInfo.specName
+        local role = unitInfo.role
+        local renown = unitInfo.renown
+        local covenantId = unitInfo.covenantId
+        local talents = unitInfo.talents
+        local pvpTalents = unitInfo.pvpTalents
+        local conduits = unitInfo.conduits
+        local class = unitInfo.class
+        local classId = unitInfo.classId
+        local className = unitInfo.className
+        local unitName = unitInfo.name
+        local unitNameFull = unitInfo.nameFull
+    end
+end
+
+openRaidLib.RegisterCallback(openRaidLib, "UnitInfoUpdate", "OnUnitUpdate")
+
+-- Sort Party and get Specs
+function sortPartyRolesAndSpec(selector)
+    local party1 = determinePartyRole("party1")
+    local party2 = determinePartyRole("party2")
+    local party3 = determinePartyRole("party3")
+    local party4 = determinePartyRole("party4")
+    local player = determinePlayerRole()
+
+    unsortedPartyTable = {party1, party2, party3, party4, player}
+    sortedPartyTable = {}
+    sortedPartyTable.tank = "No Tank Found"
+    sortedPartyTable.healer = "No Healer Found"
+    sortedPartyTable.dps1 = "DPS 1 NOT Found"
+    sortedPartyTable.dps2 = "DPS 2 NOT Found"
+    sortedPartyTable.dps3 = "DPS 3 NOT Found"
+    
+    for pnum = 1,5 do
+        if unsortedPartyTable[pnum][1] == "TANK" then
+            sortedPartyTable.tank = unsortedPartyTable[pnum][2]
+        elseif unsortedPartyTable[pnum][1] == "HEALER" then
+            sortedPartyTable.healer = unsortedPartyTable[pnum][2]
+        elseif unsortedPartyTable[pnum][1] == "DAMAGER" then
+            if sortedPartyTable.dps1 == "DPS 1 NOT Found" then
+                sortedPartyTable.dps1 = unsortedPartyTable[pnum][2]
+            elseif sortedPartyTable.dps2 == "DPS 2 NOT Found" then
+                sortedPartyTable.dps2 = unsortedPartyTable[pnum][2]
+            elseif sortedPartyTable.dps3 == "DPS 3 NOT Found" then
+                sortedPartyTable.dps3 = unsortedPartyTable[pnum][2]
+            end
+        end
+    end
+    return sortedPartyTable[selector]
+end
+
+function GetCompInfo(arg)
+    mapChallengeModeID, level, mstime, onTime, keystoneUpgradeLevels, practiceRun, oldOverallDungeonScore, newOverallDungeonScore, IsMapRecord, IsAffixRecord, PrimaryAffix, isEligibleForScore, members = C_ChallengeMode.GetCompletionInfo()
+    local test = "Start"
+    local test2 = "End"
+    info = {}
+    table.insert(info, test)
+    if mapChallengeModeID ~= nil then
+        table.insert(info, mapChallengeModeID)
+    end
+    table.insert(info, level)
+    table.insert(info, mstime)
+    table.insert(info, ontime)
+    table.insert(info, test2)
+
+    return info[arg]
+end
+
+local cms_frame = CreateFrame("FRAME", "CMS_Frame");
+cms_frame:RegisterEvent("CHALLENGE_MODE_START");
+local function CMS_Handler(self, event, ...)
+    print("Challenge Mode Started")
+    print("Starting Test 1 -- 3 Outputs")
+    activeKeystoneLevel, activeAffixIDs, wasActiveKeystoneCharged = C_ChallengeMode.GetActiveKeystoneInfo()
+    print("Keystone Level: ", activeKeystoneLevel)
+    print("Active Affix Ids: ", activeAffixIDs)
+    print("Keystone Charged: ", wasActiveKeystoneCharged)
+    print("Test 1 Complete")
+    print("...............")
+    print("Test 2 Starting -- 5 Outputs")
+    p1 = getPartyInformation("party1", "partyName")
+    p2 = getPartyInformation("party2", "partyName")
+    p3 = getPartyInformation("party3", "partyName")
+    p4 = getPartyInformation("party4", "partyName")
+    player_n = getPlayerInformation("playerName")
+    print(p1 .. " " .. p2 .. " " .. " " .. p3 .. " " .. p4 .. " " .. player_n)
+    print("Test 2 Complete")
+    print("...............")
+    print("Test 3 Starting -- 5 Outputs")
+    print(sortPartyRolesAndSpec("tank") .. " " .. sortPartyRolesAndSpec("healer") .. " " .. sortPartyRolesAndSpec("dps1") .. " " .. sortPartyRolesAndSpec("dps2") .. " " .. sortPartyRolesAndSpec("dps3"))
+    print("Test 3 Complete")
+    
+
+
+
+end
+
+local cmc_frame = CreateFrame("FRAME", "CMC_Frame");
+cmc_frame:RegisterEvent("CHALLENGE_MODE_COMPLETED");
+local function CMC_Handler(self, event, ...)
+    print("Challenge Mode Complete")
+    GetCompInfo()
+    StaticPopup_Show ("PopupTest")
+
+end
+
+cms_frame:SetScript("OnEvent", CMS_Handler);
+cmc_frame:SetScript("OnEvent", CMC_Handler);
+
+StaticPopupDialogs["PopupTest"] = {
+    text = "CHALLENGE_MODE_COMPLETED POPUP",
+    button1 = "Done",
+    button2 = "Cancel",
+    OnShow = function (self, data)
+        self.editBox:SetText("MapID: " .. GetCompInfo(2) .. " Level: " ..  GetCompInfo(3) .. " Time (ms): " .. GetCompInfo(4))
+    end,
+    timeout = 0,
+    hasEditBox = true,
+    whileDead = true,
+    hideOnEscape = true,
+    preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+  }
+
+SLASH_KEY1 = '/trax';
+function SlashCmdList.KEY(msg, editBox)
+
+    if msg then msg = string.lower( msg ); end
+        --  StaticPopup_Show ("PopupTest")
+        print(getPlayerInformation("playerName"))
+        -- print(player_r)
+        print(sortPartyRolesAndSpec("tank") .. " " .. sortPartyRolesAndSpec("healer") .. " " .. sortPartyRolesAndSpec("dps1") .. " " .. sortPartyRolesAndSpec("dps2") .. " " .. sortPartyRolesAndSpec("dps3"))
+
+
+end
