@@ -1,3 +1,4 @@
+-- Take party member's party num and use it to pull party information.
 function getPartyInformation(partyNum, ...)
     local unitInfo = openRaidLib.GetUnitInfo(partyNum)
     local playerGear = openRaidLib.GetUnitGear(partyNum)
@@ -6,7 +7,7 @@ function getPartyInformation(partyNum, ...)
     if unitInfo ~= nil then
         partyTable["partyName"] = unitInfo.name
         partyTable["partyRole"] = unitInfo.role
-        partyTable["partySpecName"] = unitInfo.specName
+        partyTable["partySpecId"] = unitInfo.specId
         partyTable["partyiLevel"] = playerGear.ilevel
     else partyTable[...] = "unknown" end
     return partyTable[...]
@@ -15,11 +16,111 @@ end
 
 -- Function takes in player role and sets them in order of TANK - HEALER - DAMAGER - DAMAGER - DAMAGER
 function determinePartyRole(partyNum)
-    initRaidLib()
     local role = getPartyInformation(partyNum, "partyRole")
-    local spec = getPartyInformation(partyNum, "partySpecName")
-    local partyRoleSpec = {role, spec}
+    local specId = getPartyInformation(partyNum, "partySpecId")
+    local partyRoleSpec = {role, specId}
     return partyRoleSpec
+end
+
+-- Take SpecId and translate to Spec Name.
+function specIdTranslation_Tank(id)
+    local specializationName = "empty"
+    if id == 250 then
+        specializationName = "Blood DK"
+    elseif id == 581 then
+        specializationName = "Vengeance"
+    elseif id == 104 then
+        specializationName = "Guardian"
+    elseif id == 268 then
+        specializationName = "Brewmaster"
+    elseif id == 66 then
+        specializationName = "Prot Pal"
+    elseif id == 73 then
+        specializationName = "Prot War"
+    else
+    end
+    return specializationName
+end
+
+-- Take SpecId and translate to Spec Name.
+function specIdTranslation_Healer(id)
+    local specializationName = ""
+    if id == 105 then
+        specializationName = "Rdruid"
+    elseif id == 270 then
+        specializationName = "Mistweaver"
+    elseif id == 65 then
+        specializationName = "Hpal"
+    elseif id == 256 then
+        specializationName = "Disc"
+    elseif id == 257 then
+        specializationName = "Hpriest"
+    elseif id == 264 then 
+        specializationName = "Rsham"
+    elseif id == 1468 then
+        specializationName = "Pres"
+    else
+    end
+    return specializationName
+    
+end
+
+-- Take SpecId and translate to Spec Name.
+function specIdTranslation_DPS(id)
+    local specializationName = ""
+    if id == 251 then
+        specializationName = "Frost DK"
+    elseif id == 252 then
+        specializationName = "Unholy"
+    elseif id == 577 then
+        specializationName = "Havoc"
+    elseif id == 102 then
+        specializationName = "Boomkin"
+    elseif id == 103 then
+        specializationName = "Feral"
+    elseif id == 253 then 
+        specializationName = "BM"
+    elseif id == 254 then
+        specializationName = "MM"
+    elseif id == 255 then
+        specializationName = "Survival"
+    elseif id == 62 then
+        specializationName = "Arcane"
+    elseif id == 63 then
+        specializationName = "Frost"
+    elseif id == 64 then
+        specializationName = "Fire"
+    elseif id == 269 then 
+        specializationName = "Windwalker"
+    elseif id == 70 then
+        specializationName = "Ret"
+    elseif id == 258 then
+        specializationName = "Shadow"
+    elseif id == 259 then
+        specializationName = "Assass"
+    elseif id == 260 then
+        specializationName = "Outlaw"
+    elseif id == 261 then
+        specializationName = "Sub"
+    elseif id == 262 then
+        specializationName = "Ele"
+    elseif id == 263 then
+        specializationName = "Enhance"
+    elseif id == 265 then
+        specializationName = "Afflic"
+    elseif id == 266 then
+        specializationName = "Demo"
+    elseif id == 267 then
+        specializationName = "Destro"
+    elseif id == 71 then
+        specializationName = "Arms"
+    elseif id == 72 then
+        specializationName = "Fury"
+    elseif id == 1467 then
+        specializationName = "Dev"
+    else
+    end
+    return specializationName
 end
 
 -- Sort Party and get Specs
@@ -34,22 +135,22 @@ function sortPartyRolesAndSpec(selector)
     sortedPartyTable = {}
     sortedPartyTable.tank = "No Tank Found"
     sortedPartyTable.healer = "No Healer Found"
-    sortedPartyTable.dps1 = "No DPS Found"
-    sortedPartyTable.dps2 = "No DPS Found"
-    sortedPartyTable.dps3 = "No DPS Found"
+    sortedPartyTable.dps1 = "No DPS(1) Found"
+    sortedPartyTable.dps2 = "No DPS(2) Found"
+    sortedPartyTable.dps3 = "No DPS(3) Found"
     
     for pnum = 1,5 do
         if unsortedPartyTable[pnum][1] == "TANK" then
-            sortedPartyTable.tank = unsortedPartyTable[pnum][2]
+            sortedPartyTable.tank = specIdTranslation_Tank(unsortedPartyTable[pnum][2])
         elseif unsortedPartyTable[pnum][1] == "HEALER" then
-            sortedPartyTable.healer = unsortedPartyTable[pnum][2]
+            sortedPartyTable.healer = specIdTranslation_Healer(unsortedPartyTable[pnum][2])
         elseif unsortedPartyTable[pnum][1] == "DAMAGER" then
-            if sortedPartyTable.dps1 == "No DPS Found" then
-                sortedPartyTable.dps1 = unsortedPartyTable[pnum][2]
-            elseif sortedPartyTable.dps2 == "No DPS Found" then
-                sortedPartyTable.dps2 = unsortedPartyTable[pnum][2]
-            elseif sortedPartyTable.dps3 == "No DPS Found" then
-                sortedPartyTable.dps3 = unsortedPartyTable[pnum][2]
+            if sortedPartyTable.dps1 == "No DPS(1) Found" then
+                sortedPartyTable.dps1 = specIdTranslation_DPS(unsortedPartyTable[pnum][2])
+            elseif sortedPartyTable.dps2 == "No DPS(2) Found" then
+                sortedPartyTable.dps2 = specIdTranslation_DPS(unsortedPartyTable[pnum][2])
+            elseif sortedPartyTable.dps3 == "No DPS(3) Found" then
+                sortedPartyTable.dps3 = specIdTranslation_DPS(unsortedPartyTable[pnum][2])
             end
         end
     end

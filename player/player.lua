@@ -7,15 +7,14 @@ function getPlayerInformation(arg)
     playerTable["playerName"] = unitInfo.name
     playerTable["playeriLevel"] = playerGear.ilevel
     playerTable["playerRole"] = unitInfo.role
-    playerTable["playerSpec"] = unitInfo.specName
+    playerTable["playerSpecId"] = unitInfo.specId
 
     return playerTable[arg]
 end 
--- Player Role
+-- Get Player Role/SpecId
 function determinePlayerRole()
-    initRaidLib()
     local role = getPlayerInformation("playerRole")
-    local spec = getPlayerInformation("playerSpec")
-    local playerRoleSpec = {role, spec}
+    local specId = getPlayerInformation("playerSpecId")
+    local playerRoleSpec = {role, specId}
     return playerRoleSpec
 end

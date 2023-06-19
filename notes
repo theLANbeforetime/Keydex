@@ -41,6 +41,7 @@ openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
 
 function Trax:OnInitialize()
 	self:Print("Testing Suite Loaded")
+    print(sortPartyRolesAndSpec("tank") .. " " .. sortPartyRolesAndSpec("healer") .. " " .. sortPartyRolesAndSpec("dps1") .. " " .. sortPartyRolesAndSpec("dps2") .. " " .. sortPartyRolesAndSpec("dps3"))  
 end
 
 function Trax:OnEnable()
@@ -125,11 +126,11 @@ function sortPartyRolesAndSpec(selector)
 
     unsortedPartyTable = {party1, party2, party3, party4, player}
     sortedPartyTable = {}
-    sortedPartyTable.tank = "No Tank Found"
-    sortedPartyTable.healer = "No Healer Found"
-    sortedPartyTable.dps1 = "DPS 1 NOT Found"
-    sortedPartyTable.dps2 = "DPS 2 NOT Found"
-    sortedPartyTable.dps3 = "DPS 3 NOT Found"
+    sortedPartyTable.tank = "No Tank"
+    sortedPartyTable.healer = "No Healer"
+    sortedPartyTable.dps1 = "No DPS 1"
+    sortedPartyTable.dps2 = "No DPS 2"
+    sortedPartyTable.dps3 = "No DPS 3"
     
     for pnum = 1,5 do
         if unsortedPartyTable[pnum][1] == "TANK" then
@@ -137,11 +138,11 @@ function sortPartyRolesAndSpec(selector)
         elseif unsortedPartyTable[pnum][1] == "HEALER" then
             sortedPartyTable.healer = unsortedPartyTable[pnum][2]
         elseif unsortedPartyTable[pnum][1] == "DAMAGER" then
-            if sortedPartyTable.dps1 == "DPS 1 NOT Found" then
+            if sortedPartyTable.dps1 == "DPS 1" then
                 sortedPartyTable.dps1 = unsortedPartyTable[pnum][2]
-            elseif sortedPartyTable.dps2 == "DPS 2 NOT Found" then
+            elseif sortedPartyTable.dps2 == "DPS 2" then
                 sortedPartyTable.dps2 = unsortedPartyTable[pnum][2]
-            elseif sortedPartyTable.dps3 == "DPS 3 NOT Found" then
+            elseif sortedPartyTable.dps3 == "DPS 3" then
                 sortedPartyTable.dps3 = unsortedPartyTable[pnum][2]
             end
         end
@@ -204,6 +205,15 @@ local function CMC_Handler(self, event, ...)
 
 end
 
+local TEST_FRAME = CreateFrame("FRAME", "TEST_FRAME");
+TEST_FRAME:RegisterEvent("PLAYER_STARTED_MOVING");
+local function ROLE_HANDLER(self, event, ...)
+    print("Test Start")
+    -- print(sortPartyRolesAndSpec("tank") .. " " .. sortPartyRolesAndSpec("healer") .. " " .. sortPartyRolesAndSpec("dps1") .. " " .. sortPartyRolesAndSpec("dps2") .. " " .. sortPartyRolesAndSpec("dps3"))
+    print("Test End")
+end
+TEST_FRAME:SetScript("OnEvent", ROLE_HANDLER);
+
 cms_frame:SetScript("OnEvent", CMS_Handler);
 cmc_frame:SetScript("OnEvent", CMC_Handler);
 
@@ -229,6 +239,11 @@ function SlashCmdList.KEY(msg, editBox)
         print(getPlayerInformation("playerName"))
         -- print(player_r)
         print(sortPartyRolesAndSpec("tank") .. " " .. sortPartyRolesAndSpec("healer") .. " " .. sortPartyRolesAndSpec("dps1") .. " " .. sortPartyRolesAndSpec("dps2") .. " " .. sortPartyRolesAndSpec("dps3"))
-
+        p1 = getPartyInformation("party1", "partyName")
+        p2 = getPartyInformation("party2", "partyName")
+        p3 = getPartyInformation("party3", "partyName")
+        p4 = getPartyInformation("party4", "partyName")
+        player_n = getPlayerInformation("playerName")
+        print(p1 .. " " .. p2 .. " " .. " " .. p3 .. " " .. p4 .. " " .. player_n)
 
 end

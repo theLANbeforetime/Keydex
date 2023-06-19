@@ -1,72 +1,74 @@
-
 -- Get Weekly Affixes
 function getWeeklyAffixes(affix_level)
     local weekly_affixes = {}
-    weekly_affixes[1] = "Nil"
-    weekly_affixes[2] = "Nil"
-    weekly_affixes[3] = "Nil"
 
-    C_MythicPlus.RequestMapInfo()
-    affixes = C_MythicPlus.RequestCurrentAffixes()
-    if affixes == nil then
-    else
-        for i=1,3 do
-            for k,v in pairs(affixes[i]) do
-                if v ~= 0 then
-                    -- Level 2 Affixes
-                    if v == 9 then 
-                        weekly_affixes[1] = "Tyrannical" 
-                    elseif v == 10 then 
-                        weekly_affixes[1] = "Fortified" 
-                    -- Level 7 Affixes
-                    elseif v == 134 then 
-                        weekly_affixes[2] = "Entangling"
-                    elseif v == 135 then 
-                        weekly_affixes[2] = "Afflicted"
-                    elseif v == 136 then 
-                        weekly_affixes[2] = "Incorporeal"
-                    elseif v == 124 then 
-                        weekly_affixes[2] = "Storming"
-                    elseif v == 3 then 
-                        weekly_affixes[2] = "Volcanic"   
-                    -- Level 14 Affixes
-                    elseif v == 7 then 
-                        weekly_affixes[3] = "Bolstering"
-                    elseif v == 11 then 
-                        weekly_affixes[3]  = "Bursting"
-                    elseif v == 6 then 
-                        weekly_affixes[3] = "Raging"
-                    elseif v == 8 then 
-                        weekly_affixes[3] = "Sanguine" 
-                    elseif v == 13 then 
-                        weekly_affixes[3] = "Explosive" 
-                    elseif v == 123 then 
-                        weekly_affixes[3] = "Spiteful"
+    local request = C_MythicPlus.RequestMapInfo()
+    local affixes = C_MythicPlus.GetCurrentAffixes()
+    for i=1,3 do
+        for k,v in pairs(affixes[i]) do
+            if v ~= 0 then
+                -- Level 2 Affixes
+                if v == 9 then 
+                    weekly_affixes[1] = "Tyrannical" 
+                elseif v == 10 then 
+                    weekly_affixes[1] = "Fortified" 
+                -- Level 7 Affixes
+                elseif v == 134 then 
+                    weekly_affixes[2] = "Entangling"
+                elseif v == 135 then 
+                    weekly_affixes[2] = "Afflicted"
+                elseif v == 136 then 
+                    weekly_affixes[2] = "Incorporeal"
+                elseif v == 124 then 
+                    weekly_affixes[2] = "Storming"
+                elseif v == 3 then 
+                    weekly_affixes[2] = "Volcanic"   
+                -- Level 14 Affixes
+                elseif v == 7 then 
+                    weekly_affixes[3] = "Bolstering"
+                elseif v == 11 then 
+                    weekly_affixes[3]  = "Bursting"
+                elseif v == 6 then 
+                    weekly_affixes[3] = "Raging"
+                elseif v == 8 then 
+                    weekly_affixes[3] = "Sanguine" 
+                elseif v == 13 then 
+                    weekly_affixes[3] = "Explosive" 
+                elseif v == 123 then 
+                    weekly_affixes[3] = "Spiteful"
 
 
-                    -- Affixes Currently Out of Band
-                    -- elseif v == 12 then 
-                    --     weekly_affixes[3] = "Grievous"
-                    -- elseif v == 5 then 
-                    --     weekly_affixes[2] = "Teeming"   
-                    -- elseif v == 122 then 
-                    --     weekly_affixes[2] = "Inspiring"  
-                    -- elseif v == 14 then 
-                    --     weekly_affixes[3] = "Quaking" 
-                    -- elseif v == 4 then 
-                    --     weekly_affixes[3] = "Necrotic"
-                    -- elseif v == 1 then 
-                    --     weekly_affixes[3] = "Overflowing" 
-                    -- elseif v == 2 then 
-                    --     weekly_affixes[3] = "Skitish"
-                    end
+                -- Affixes Currently Out of Band
+                -- elseif v == 12 then 
+                --     weekly_affixes[3] = "Grievous"
+                -- elseif v == 5 then 
+                --     weekly_affixes[2] = "Teeming"   
+                -- elseif v == 122 then 
+                --     weekly_affixes[2] = "Inspiring"  
+                -- elseif v == 14 then 
+                --     weekly_affixes[3] = "Quaking" 
+                -- elseif v == 4 then 
+                --     weekly_affixes[3] = "Necrotic"
+                -- elseif v == 1 then 
+                --     weekly_affixes[3] = "Overflowing" 
+                -- elseif v == 2 then 
+                --     weekly_affixes[3] = "Skitish"
                 end
             end
         end
     end
-    -- -- Level 10 Affix Not in PLay
-    -- weekly_affixes[4] = "Thundering"
     return weekly_affixes[affix_level]
+end
+
+-- Get Active Key Map
+function getCurrentMap()
+    local mapChallengeModeID = C_ChallengeMode.GetActiveChallengeMapID()
+    if mapChallengeModeID == 0 then
+        mapChallengeModeID = 9999
+    elseif mapChallengeModeID == nil then
+        mapChallengeModeID  = 9999
+    end
+    return  mapChallengeModeID
 end
 
 -- Translate Key Map ID to Dungeon Name
@@ -135,31 +137,18 @@ function translateMapID(mapId)
             [167]	=	"Upper Blackrock Spire",
             [207]	=	"Vault of the Wardens",
             [402]	=	"Waycrest Manor",
+            [438]   =   "Vortex Pinnacle"
         }
     else dungeonNameTable[mapId] = "NoData"
     end
-    
     return dungeonNameTable[mapId]
 end
-
--- Get Active Key Map
-function getCurrentMap()
-    local mapChallengeModeID = C_ChallengeMode.GetActiveChallengeMapID()
-    if mapChallengeModeID == 0 then
-        mapChallengeModeID = 9999
-    elseif mapChallengeModeID == nil then
-        mapChallengeModeID  = 9999
-    end
-    return  mapChallengeModeID
-end
-
 
 
 -- Returns TimeLimit of the Key in Seconds
 function getKeyTimeLimit()
     local map = C_ChallengeMode.GetCompletionInfo()
     local name, id, timeLimit = C_ChallengeMode.GetMapUIInfo(getCurrentMap())
-
     return timeLimit
 end
 

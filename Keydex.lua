@@ -2,33 +2,19 @@
 
 -- Initialize WoWAce
 Keydex = LibStub("AceAddon-3.0"):NewAddon("Keydex", "AceConsole-3.0", "AceEvent-3.0")
+openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
 
--- function Keydex:OnInitialize()
--- 	-- Called when the addon is loaded
---     -- The events we see when we try to initial request
---     -- MYTHIC_PLUS_CURRENT_AFFIX_UPDATE
---     -- CHALLENGE_MODE_MAPS_UPDATE
--- 	self:Print("Starting Map Info Request")
---     C_MythicPlus.RequestMapInfo()
---     self:Print("Map Info Request Complete")
--- end
+function Keydex:OnInitialize()
+	-- Place Holder
+end
 
--- function Keydex:OnEnable()
--- 	-- Called when the addon is enabled
---     event = self:RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE")
---     self:Print(event)
--- end
+function Keydex:OnEnable()
+	-- Place Holder
+end
 
--- function Keydex:CHALLENGE_MODE_MAPS_UPDATE()
--- 	affixes = C_MythicPlus.GetCurrentAffixes()
--- end
-
--- function Keydex:OnDisable()
--- 	-- Called when the addon is disabled
--- end
-
-
-
+function Keydex:OnDisable()
+	-- Called when the addon is disabled
+end
 
 -- Get Date of Instance Run
 function getDate()
@@ -36,19 +22,25 @@ function getDate()
     return currentDate
 end
 
-function initKeyInfo()
-    C_MythicPlus.RequestMapInfo()
+function openRaidLib.OnUnitUpdate(unitId, unitInfo, allUnitsInfo)
+    for unitName, unitInfo in pairs(allUnitsInfo) do
+        local specId = unitInfo.specId
+        local specName = unitInfo.specName
+        local role = unitInfo.role
+        local renown = unitInfo.renown
+        local covenantId = unitInfo.covenantId
+        local talents = unitInfo.talents
+        local pvpTalents = unitInfo.pvpTalents
+        local conduits = unitInfo.conduits
+        local class = unitInfo.class
+        local classId = unitInfo.classId
+        local className = unitInfo.className
+        local unitName = unitInfo.name
+        local unitNameFull = unitInfo.nameFull
+    end
 end
 
-function initRaidLib()
-    local data = openRaidLib.RequestAllData()
-    return data
-end
-
-function initAffixInfo()
-    local affixes = C_MythicPlus.GetCurrentAffixes()
-    return affixes
-end
+openRaidLib.RegisterCallback(openRaidLib, "UnitInfoUpdate", "OnUnitUpdate")
 
 function escapeCSV(s)
     if string.find(s, '[,"]') then
@@ -67,14 +59,17 @@ function toCSV(tt)
     return string.sub(s, 2)      -- remove first comma
 end
 
-local frame = CreateFrame("FRAME", "KeydexAddonFrame");
-frame:RegisterEvent("CHALLENGE_MODE_COMPLETED");
-local function eventHandler(self, event, ...)
---  print(getDate(), getPlayerInformation("playerName"), getCurrentMap(), getCurrentKeyLevel(), getWeeklyAffixes(1), getWeeklyAffixes(2), getWeeklyAffixes(3), sortPartyRolesAndSpec("tank"), sortPartyRolesAndSpec("healer"), sortPartyRolesAndSpec("dps1"), sortPartyRolesAndSpec("dps2"), sortPartyRolesAndSpec("dps3"))
-    -- TODO: Note (Not sure if this should be implemented)
+function Keydex:CHALLENGE_MODE_START()
+    exportOutput = toCSV(csvDataStruct())
+end
+
+Keydex:RegisterEvent("CHALLENGE_MODE_START");
+
+function Keydex:CHALLENGE_MODE_COMPLETED()
     StaticPopup_Show ("KEYDEX_COPYWINDOW")
 end
-frame:SetScript("OnEvent", eventHandler);
+
+Keydex:RegisterEvent("CHALLENGE_MODE_COMPLETED");
 
 
 StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {
@@ -90,21 +85,9 @@ StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {
     hideOnEscape = true,
     preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
   }
-  
--- OnShow = function (self, data)
---     self.editBox:SetText("Some text goes here")
--- end,
--- OnAccept = function (self, data, data2)
---     local text = self.editBox:GetText()
---     -- do whatever you want with it
--- end,
--- hasEditBox = true
- -- Create structure to store data that will be copied.
- -- TODO: Make this dynamic so players can choose how they want to structure 
- -- own data in CSV format. 
 
+  -- Function to build the CSV data we push out into the StaticDiaglogPopup
  function csvDataStruct()
-    initKeyInfo()
     local sheetTable = {}
     -- Table will not print after null value.
     sheetTable[1] = getDate()
@@ -114,11 +97,12 @@ StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {
     sheetTable[5] = getWeeklyAffixes(1)
     sheetTable[6] = getWeeklyAffixes(2)
     sheetTable[7] = getWeeklyAffixes(3)
-    sheetTable[8] = sortPartyRolesAndSpec("tank")
-    sheetTable[9] = sortPartyRolesAndSpec("healer")
-    sheetTable[10] = sortPartyRolesAndSpec("dps1")
-    sheetTable[11] = sortPartyRolesAndSpec("dps2")
-    sheetTable[12] = sortPartyRolesAndSpec("dps3")
+    sheetTable[8] = "Timed" -- TODO: Implement logic so this is not static
+    sheetTable[9] = sortPartyRolesAndSpec("tank")
+    sheetTable[10] = sortPartyRolesAndSpec("healer")
+    sheetTable[11] = sortPartyRolesAndSpec("dps1")
+    sheetTable[12] = sortPartyRolesAndSpec("dps2")
+    sheetTable[13] = sortPartyRolesAndSpec("dps3")
     -- sheetTable[13] = getKeyCompletion()
     -- sheetTable[14] = getQuickNote()
     
@@ -130,10 +114,12 @@ end
 function SlashCmdList.KEY(msg, editBox)
 
     if msg then msg = string.lower( msg ); end
-    --if msg == "test" then
-         StaticPopup_Show ("KEYDEX_COPYWINDOW")
-
+        if msg == "showbox" then
+            StaticPopup_Show ("KEYDEX_COPYWINDOW")
+        else
+        end
     -- TESTING OF FUNCTIONS
+        print("Current Map is: ", translateMapID(getCurrentMap()))
         -- print("Current date is: ", getDate())
         -- print("Your Item Level is: ", getPlayerInformation("playeriLevel"))
         -- print("Your Role is: ", getPlayerInformation("playerRole"))
