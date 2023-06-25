@@ -94,17 +94,29 @@ StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {
     sheetTable[2] = getPlayerInformation("playerName")
     sheetTable[3] = translateMapID(getCurrentMap())
     sheetTable[4] = getCurrentKeyLevel()
-    sheetTable[5] = getWeeklyAffixes(1)
-    sheetTable[6] = getWeeklyAffixes(2)
-    sheetTable[7] = getWeeklyAffixes(3)
+    if getCurrentKeyLevel() <= 6 then
+        sheetTable[5] = getWeeklyAffixes(1)
+        sheetTable[6] = ''
+        sheetTable[7] = ''
+    elseif (getCurrentKeyLevel() >= 7 and getCurrentKeyLevel() <=13) then
+        sheetTable[5] = getWeeklyAffixes(1)
+        sheetTable[6] = getWeeklyAffixes(2)
+        sheetTable[7] = ''
+    elseif getCurrentKeyLevel() >= 14 then
+        sheetTable[5] = getWeeklyAffixes(1)
+        sheetTable[6] = getWeeklyAffixes(2)
+        sheetTable[7] = getWeeklyAffixes(3)
+    else
+        sheetTable[5] = ''
+        sheetTable[6] = ''
+        sheetTable[7] = ''
+    end
     sheetTable[8] = "Timed" -- TODO: Implement logic so this is not static
     sheetTable[9] = sortPartyRolesAndSpec("tank")
     sheetTable[10] = sortPartyRolesAndSpec("healer")
     sheetTable[11] = sortPartyRolesAndSpec("dps1")
     sheetTable[12] = sortPartyRolesAndSpec("dps2")
     sheetTable[13] = sortPartyRolesAndSpec("dps3")
-    -- sheetTable[13] = getKeyCompletion()
-    -- sheetTable[14] = getQuickNote()
     
     return sheetTable
 end
@@ -118,21 +130,5 @@ function SlashCmdList.KEY(msg, editBox)
             StaticPopup_Show ("KEYDEX_COPYWINDOW")
         else
         end
-    -- TESTING OF FUNCTIONS
-        print("Current Map is: ", translateMapID(getCurrentMap()))
-        -- print("Current date is: ", getDate())
-        -- print("Your Item Level is: ", getPlayerInformation("playeriLevel"))
-        -- print("Your Role is: ", getPlayerInformation("playerRole"))
-        -- print("Your Spec is: ", getPlayerInformation("playerSpec"))
-        -- print("Weekly Affixes are: ", getWeeklyAffixes(1), getWeeklyAffixes(2), getWeeklyAffixes(3))
-        -- print("Current Key Level: ", getCurrentKeyLevel())
-        -- print("Current Map is: ", translateMapID(getCurrentMap()))
-        -- print(getCurrentMap())
-        -- print("Party One Information: ", getPartyInformation("party1", "partyName", "partyRole", "partySpecName", "partyiLevel"))
-        -- print("Party One Role: ", getPartyInformation("party1", "partyRole"))
-        -- print("Party Two Information: ", getPartyInformation("party2", "partyName", "partyRole", "partySpecName", "partyiLevel"))
-        -- print("Party Three Information: ", getPartyInformation("party3", "partyName", "partyRole", "partySpecName", "partyiLevel"))
-        -- print("Party Four Information: ", getPartyInformation("party4", "partyName", "partyRole", "partySpecName", "partyiLevel"))
-    --end 
 end
 
