@@ -1,5 +1,6 @@
--- Get Player Data
 function getPlayerInformation(arg)
+    -- Get Player Data
+    
     local unitInfo = openRaidLib.GetUnitInfo("player")
     local playerGear = openRaidLib.GetUnitGear("player")
 
@@ -11,8 +12,10 @@ function getPlayerInformation(arg)
 
     return playerTable[arg]
 end 
--- Get Player Role/SpecId
+
 function determinePlayerRole()
+    -- Get Player Role/SpecId
+
     local role = getPlayerInformation("playerRole")
     local specId = getPlayerInformation("playerSpecId")
     local playerRoleSpec = {role, specId}

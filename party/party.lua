@@ -1,5 +1,7 @@
--- Take party member's party num and use it to pull party information.
 function getPartyInformation(partyNum, ...)
+    --[[ Take party member's party num and use it to 
+    pull party information. ]]
+
     local unitInfo = openRaidLib.GetUnitInfo(partyNum)
     local playerGear = openRaidLib.GetUnitGear(partyNum)
 
@@ -14,16 +16,19 @@ function getPartyInformation(partyNum, ...)
 
 end
 
--- Function takes in player role and sets them in order of TANK - HEALER - DAMAGER - DAMAGER - DAMAGER
 function determinePartyRole(partyNum)
+    --[[ Function takes in player role and sets them in order of 
+    TANK - HEALER - DAMAGER - DAMAGER - DAMAGER ]]
+
     local role = getPartyInformation(partyNum, "partyRole")
     local specId = getPartyInformation(partyNum, "partySpecId")
     local partyRoleSpec = {role, specId}
     return partyRoleSpec
 end
 
--- Take SpecId and translate to Spec Name.
 function specIdTranslation_Tank(id)
+    --[[Take SpecId and translate to Spec Name.]]
+
     local specializationName = "empty"
     if id == 250 then
         specializationName = "Blood DK"
@@ -42,8 +47,9 @@ function specIdTranslation_Tank(id)
     return specializationName
 end
 
--- Take SpecId and translate to Spec Name.
 function specIdTranslation_Healer(id)
+    --[[Take SpecId and translate to Spec Name.]]
+
     local specializationName = ""
     if id == 105 then
         specializationName = "Rdruid"
@@ -65,8 +71,9 @@ function specIdTranslation_Healer(id)
     
 end
 
--- Take SpecId and translate to Spec Name.
 function specIdTranslation_DPS(id)
+    --[[Take SpecId and translate to Spec Name.]]
+
     local specializationName = ""
     if id == 251 then
         specializationName = "Frost DK"
@@ -123,8 +130,9 @@ function specIdTranslation_DPS(id)
     return specializationName
 end
 
--- Sort Party and get Specs
 function sortPartyRolesAndSpec(selector)
+    -- Sort Party and get Specs
+    
     local party1 = determinePartyRole("party1")
     local party2 = determinePartyRole("party2")
     local party3 = determinePartyRole("party3")

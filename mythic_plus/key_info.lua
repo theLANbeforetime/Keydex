@@ -1,8 +1,16 @@
--- Get Weekly Affixes
 function getWeeklyAffixes(affix_level)
+    --[[
+         Grabs weekly Affixes after making a request to
+         WoW API for RequestMapInfo since current Affixes
+         cannot be pulled. See:
+         https://wowpedia.fandom.com/wiki/API_C_MythicPlus.RequestMapInfo
+         However, the data for affixes does not populate until RequestMapInfo
+         triggers CHALLENGE_MODE_MAPS_UPDATE.
+    ]]
+    
     local weekly_affixes = {}
 
-    local request = C_MythicPlus.RequestMapInfo()
+    local request = C_MythicPlus.RequestMapInfo() 
     local affixes = C_MythicPlus.GetCurrentAffixes()
     for i=1,3 do
         for k,v in pairs(affixes[i]) do
@@ -60,8 +68,14 @@ function getWeeklyAffixes(affix_level)
     return weekly_affixes[affix_level]
 end
 
--- Get Active Key Map
 function getCurrentMap()
+    --[[ 
+        Get the map from the active key and
+        if it is nil assign it to '9999' so
+        the translateMapID function can assign
+        the map name to "NoData".
+    ]]
+
     local mapChallengeModeID = C_ChallengeMode.GetActiveChallengeMapID()
     if mapChallengeModeID == 0 then
         mapChallengeModeID = 9999
@@ -71,9 +85,13 @@ function getCurrentMap()
     return  mapChallengeModeID
 end
 
--- Translate Key Map ID to Dungeon Name
 function translateMapID(mapId)
-    -- List of Current Challenge Maps pulled from WoW Tools (https://wow.tools/dbc/?dbc=mapchallengemode&build=10.0.5.47660#page=1)
+    --[[ 
+        Translate Key Map ID to Dungeon Name.
+        List of Current Challenge Maps pulled from WoW Tools. See:
+        (https://wow.tools/dbc/?dbc=mapchallengemode&build=10.0.5.47660#page=1)
+    ]]
+
     local dungeonNameTable = {}
     if mapId ~= 9999 then
         dungeonNameTable = {
@@ -144,16 +162,17 @@ function translateMapID(mapId)
     return dungeonNameTable[mapId]
 end
 
-
--- Returns TimeLimit of the Key in Seconds
 function getKeyTimeLimit()
+    -- Returns TimeLimit of the Key in Seconds
+
     local map = C_ChallengeMode.GetCompletionInfo()
     local name, id, timeLimit = C_ChallengeMode.GetMapUIInfo(getCurrentMap())
     return timeLimit
 end
 
--- Get Active Key Level
 function getCurrentKeyLevel()
+    -- Get Active Key Level
+
     local activeKeystoneLevel, activeAffixIDs, wasActiveKeystoneCharged = C_ChallengeMode.GetActiveKeystoneInfo()
     return activeKeystoneLevel
 end

@@ -16,8 +16,10 @@ function Keydex:OnDisable()
 	-- Called when the addon is disabled
 end
 
--- Get Date of Instance Run
+
 function getDate()
+    -- Get Date of Instance Run
+
     currentDate = date("%m/%d/%y")
     return currentDate
 end
@@ -86,8 +88,10 @@ StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {
     preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
   }
 
-  -- Function to build the CSV data we push out into the StaticDiaglogPopup
+  
  function csvDataStruct()
+    -- Function to build the CSV data we push out into the StaticDiaglogPopup
+    
     local sheetTable = {}
     -- Table will not print after null value.
     sheetTable[1] = getDate()
