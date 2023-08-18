@@ -48,7 +48,10 @@ function specIdTranslation_Tank(id)
 end
 
 function specIdTranslation_Healer(id)
-    --[[Take SpecId and translate to Spec Name.]]
+    --[[
+    Take SpecId and translate to Spec Name.
+    https://wow.tools/dbc/?dbc=chrspecialization&build=10.0.5.47660#page=1
+    ]]
 
     local specializationName = ""
     if id == 105 then
@@ -94,11 +97,11 @@ function specIdTranslation_DPS(id)
     elseif id == 62 then
         specializationName = "Arcane"
     elseif id == 63 then
-        specializationName = "Frost"
-    elseif id == 64 then
         specializationName = "Fire"
+    elseif id == 64 then
+        specializationName = "Frost"
     elseif id == 269 then 
-        specializationName = "Windwalker"
+        specializationName = "WW"
     elseif id == 70 then
         specializationName = "Ret"
     elseif id == 258 then
@@ -125,6 +128,8 @@ function specIdTranslation_DPS(id)
         specializationName = "Fury"
     elseif id == 1467 then
         specializationName = "Dev"
+    elseif id == 1473 then
+        specializationName = "Aug"
     else
     end
     return specializationName
