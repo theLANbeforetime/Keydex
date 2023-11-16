@@ -70,21 +70,18 @@ function getAffixIds()
 -- @param affix_level level of affix
  ]]
 function getWeeklyAffixes(affix_level)
-     
     weeklyAffixesTbl = translateAffixIds(currentAffixesTbl)
     return weeklyAffixesTbl[affix_level]
 end
 
 
 --[[ 
--- Get the map from the active key and
--- if it is nil assign it to '9999' so
--- the translateMapID function can assign
--- the map name to "NoData".
+-- Returns the challenge mode map id based on the players 
+-- current location. If player is not in a dungeon at the
+-- time of the call (id=0 or nil) the function returns the
+-- dummy value of 9999.
 ]]
 function getCurrentMap()
-
-
     local mapChallengeModeID = C_ChallengeMode.GetActiveChallengeMapID()
     if mapChallengeModeID == 0 then
         mapChallengeModeID = 9999
@@ -94,13 +91,18 @@ function getCurrentMap()
     return  mapChallengeModeID
 end
 
+--[[ 
+-- Returns the translated challenge mode map id to dungeon name.
+-- Map id is pulled from getCurrentMap() and if player is not
+-- in a dungeon for the call or the function returns nil a dummy 
+-- value of 9999 is provided.
+-- Dummy value of 9999 returns 'NoData' to csvDataStruct().
+-- List of current challenge maps pulled from Wago Tools. See:
+-- https://wago.tools/db2/MapChallengeMode
+--
+-- @param mapId current challenge mode map id of user
+]]
 function translateMapID(mapId)
-    --[[ 
-        Translate Key Map ID to Dungeon Name.
-        List of Current Challenge Maps pulled from WoW Tools. See:
-        (https://wow.tools/dbc/?dbc=mapchallengemode&build=10.0.5.47660#page=1)
-    ]]
-
     local dungeonNameTable = {}
     if mapId ~= 9999 then
         dungeonNameTable = {
@@ -113,6 +115,8 @@ function translateMapID(mapId)
             [233]	=	"Cathedral of Eternal Night",
             [210]	=	"Court of Stars",
             [198]	=	"Darkheart Thicket",
+            [463]   =   "Dawn of the Infinite: Galakrond's Fall",
+            [464]   =   "Dawn of the Infinite: Murozond's Rise",
             [377]	=	"De Other Side",
             [197]	=	"Eye of Azshara",
             [245]	=	"Freehold",
@@ -159,6 +163,7 @@ function translateMapID(mapId)
             [400]	=	"The Nokhud Offensive",
             [251]	=	"The Underrot",
             [382]	=	"Theater of Pain",
+            [456]      =   "Throne of the Tides"
             [246]	=	"Tol Dagor",
             [403]	=	"Uldaman: Legacy of Tyr",
             [167]	=	"Upper Blackrock Spire",
@@ -171,17 +176,15 @@ function translateMapID(mapId)
     return dungeonNameTable[mapId]
 end
 
+-- Returns TimeLimit of the Key in Seconds
 function getKeyTimeLimit()
-    -- Returns TimeLimit of the Key in Seconds
-
     local map = C_ChallengeMode.GetCompletionInfo()
     local name, id, timeLimit = C_ChallengeMode.GetMapUIInfo(getCurrentMap())
     return timeLimit
 end
 
+-- Returns current keystone level of keystone in player's inventory
 function getCurrentKeyLevel()
-    -- Get Active Key Level
-
     local activeKeystoneLevel, activeAffixIDs, wasActiveKeystoneCharged = C_ChallengeMode.GetActiveKeystoneInfo()
     return activeKeystoneLevel
 end
