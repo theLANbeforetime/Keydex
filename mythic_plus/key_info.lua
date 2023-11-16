@@ -1,80 +1,89 @@
-function getWeeklyAffixes(affix_level)
-    --[[
-         Grabs weekly Affixes after making a request to
-         WoW API for RequestMapInfo since current Affixes
-         cannot be pulled. See:
-         https://wowpedia.fandom.com/wiki/API_C_MythicPlus.RequestMapInfo
-         However, the data for affixes does not populate until RequestMapInfo
-         triggers CHALLENGE_MODE_MAPS_UPDATE.
-    ]]
-    
-    local weekly_affixes = {}
+-- Instantiate tables
+local weeklyAffixesTbl = {}
+local translatedTbl = {}
+local currentAffixesTbl = {}
+local affixNameTbl = {
+    [1] = "Overflowing",
+    [2] = "Skittish",
+    [3] = "Volcanic",
+    [4] = "Necrotic",
+    [5] = "Teeming",
+    [6] = "Raging",
+    [7] = "Bolstering",
+    [8] = "Sanguine",
+    [9] = "Tyrannical",
+    [10] = "Fortified",
+    [11] = "Bursting",
+    [12] = "Grievous",
+    [13] = "Explosive",
+    [14] = "Quaking",
+    [122] = "Inspiring",
+    [123] = "Spiteful",
+    [124] = "Storming",
+    [134] = "Entangling",
+    [135] = "Afflicted",
+    [136] = "Incorporeal"
+}
 
+
+--[[
+-- Returns a table of weekly Affixes after making a request to
+-- the WoW API for RequestMapInfo. See:
+-- https://wowpedia.fandom.com/wiki/API_C_MythicPlus.RequestMapInfo
+-- The data for affixes does not populate until RequestMapInfo
+-- triggers the in-game event CHALLENGE_MODE_MAPS_UPDATE.
+]]
+function getAffixIds()
     local request = C_MythicPlus.RequestMapInfo() 
     local affixes = C_MythicPlus.GetCurrentAffixes()
-    for i=1,3 do
-        for k,v in pairs(affixes[i]) do
-            if v ~= 0 then
-                -- Level 2 Affixes
-                if v == 9 then 
-                    weekly_affixes[1] = "Tyrannical" 
-                elseif v == 10 then 
-                    weekly_affixes[1] = "Fortified" 
-                -- Level 7 Affixes
-                elseif v == 134 then 
-                    weekly_affixes[2] = "Entangling"
-                elseif v == 135 then 
-                    weekly_affixes[2] = "Afflicted"
-                elseif v == 136 then 
-                    weekly_affixes[2] = "Incorporeal"
-                elseif v == 124 then 
-                    weekly_affixes[2] = "Storming"
-                elseif v == 3 then 
-                    weekly_affixes[2] = "Volcanic"   
-                -- Level 14 Affixes
-                elseif v == 7 then 
-                    weekly_affixes[3] = "Bolstering"
-                elseif v == 11 then 
-                    weekly_affixes[3]  = "Bursting"
-                elseif v == 6 then 
-                    weekly_affixes[3] = "Raging"
-                elseif v == 8 then 
-                    weekly_affixes[3] = "Sanguine" 
-                elseif v == 13 then 
-                    weekly_affixes[3] = "Explosive" 
-                elseif v == 123 then 
-                    weekly_affixes[3] = "Spiteful"
 
+    for _,tbl in pairs(affixes) do
+       local id = tbl["id"] or nil
+       if id ~= nil then
+          table.insert(currentAffixesTbl, id)            
+       end
+    end     
+ end
 
-                -- Affixes Currently Out of Band
-                -- elseif v == 12 then 
-                --     weekly_affixes[3] = "Grievous"
-                -- elseif v == 5 then 
-                --     weekly_affixes[2] = "Teeming"   
-                -- elseif v == 122 then 
-                --     weekly_affixes[2] = "Inspiring"  
-                -- elseif v == 14 then 
-                --     weekly_affixes[3] = "Quaking" 
-                -- elseif v == 4 then 
-                --     weekly_affixes[3] = "Necrotic"
-                -- elseif v == 1 then 
-                --     weekly_affixes[3] = "Overflowing" 
-                -- elseif v == 2 then 
-                --     weekly_affixes[3] = "Skitish"
-                end
-            end
-        end
+--[[
+-- Returns a table of the translated weekly affix names derived
+-- from the affix ids.
+--
+-- @param affixesTable the weeks current affixes
+]]
+ function translateAffixIds(affixesTable)
+    getAffixIds()
+    for _,id in ipairs(affixesTable) do
+       translatedId = affixNameTbl[id] or nil
+       table.insert(translatedTbl, translatedId)
     end
-    return weekly_affixes[affix_level]
+    return translatedTbl
+ end 
+
+ --[[
+-- Returns the name of the affix for the level (1, 2, 3)
+-- that is passed in. 
+-- Level 1 affix starts at Keystone Level 2.
+-- Level 2 affix starts at Keystone level 7.
+-- Level 3 affix starts at Keystone level 14
+
+-- @param affix_level level of affix
+ ]]
+function getWeeklyAffixes(affix_level)
+     
+    weeklyAffixesTbl = translateAffixIds(currentAffixesTbl)
+    return weeklyAffixesTbl[affix_level]
 end
 
+
+--[[ 
+-- Get the map from the active key and
+-- if it is nil assign it to '9999' so
+-- the translateMapID function can assign
+-- the map name to "NoData".
+]]
 function getCurrentMap()
-    --[[ 
-        Get the map from the active key and
-        if it is nil assign it to '9999' so
-        the translateMapID function can assign
-        the map name to "NoData".
-    ]]
+
 
     local mapChallengeModeID = C_ChallengeMode.GetActiveChallengeMapID()
     if mapChallengeModeID == 0 then
