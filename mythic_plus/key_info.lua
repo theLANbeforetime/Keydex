@@ -163,7 +163,7 @@ function translateMapID(mapId)
             [400]	=	"The Nokhud Offensive",
             [251]	=	"The Underrot",
             [382]	=	"Theater of Pain",
-            [456]      =   "Throne of the Tides"
+            [456]      =   "Throne of the Tides",
             [246]	=	"Tol Dagor",
             [403]	=	"Uldaman: Legacy of Tyr",
             [167]	=	"Upper Blackrock Spire",
