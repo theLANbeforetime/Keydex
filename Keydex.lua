@@ -133,8 +133,8 @@ function SlashCmdList.KEY(msg, editBox)
         if msg == "showbox" then
             StaticPopup_Show ("KEYDEX_COPYWINDOW")
 
-        elseif msg == "runtests"
-            print("Running All Tests")
+        elseif msg == "runtests" then
+            print("Placeholder for now...")
             --TODO: add testing :)
         else
         end
