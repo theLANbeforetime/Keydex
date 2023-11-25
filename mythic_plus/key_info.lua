@@ -193,3 +193,24 @@ function getCurrentKeyLevel()
     local activeKeystoneLevel, activeAffixIDs, wasActiveKeystoneCharged = C_ChallengeMode.GetActiveKeystoneInfo()
     return activeKeystoneLevel
 end
+
+--[[
+-- Returns the value of "Timed" or "Deplete" or "Abandon"
+-- depending on if a key is completed within time (Timed), 
+-- completed but not in time (Deplete), or if the players
+-- disband the party before completion (Abandon).
+
+]]
+function checkKeyResult()
+    mapChallengeModeID, level, time, onTime = C_ChallengeMode.GetCompletionInfo()
+    isFull = C_PartyInfo.IsPartyFull()
+    if isFull ~= false then
+        if onTime == true then
+            return "Timed"
+        else 
+            return "Deplete"
+        end
+    else
+        return "Abandon"
+    end
+end

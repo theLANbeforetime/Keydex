@@ -141,7 +141,7 @@ StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {
         sheetTable[6] = ''
         sheetTable[7] = ''
     end
-    sheetTable[8] = "Timed" -- TODO: Implement logic so this is not static
+    sheetTable[8] = checkKeyResult()
     sheetTable[9] = sortPartyRolesAndSpec("tank")
     sheetTable[10] = sortPartyRolesAndSpec("healer")
     sheetTable[11] = sortPartyRolesAndSpec("dps1")
