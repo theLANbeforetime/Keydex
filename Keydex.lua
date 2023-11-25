@@ -4,18 +4,32 @@
 Keydex = LibStub("AceAddon-3.0"):NewAddon("Keydex", "AceConsole-3.0", "AceEvent-3.0")
 openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
 
+--[[
+-- Code that is ran on the initialization of the addon.
+-- After 5 seconds sends the initial requests to the 
+-- WoW API for C_MythicPlus.RequestMapInfo() and 
+-- C_MythicPlus.GetCurrentAffixes(). This triggers 
+-- the event "MYTHIC_PLUS_CURRENT_AFFIX_UPDATE".
+]]
 function Keydex:OnInitialize()
-	-- Place Holder
+    C_Timer.After(5, initialRequestsForEvents)
+
 end
 
 function Keydex:OnEnable()
-	-- Place Holder
+	
 end
 
 function Keydex:OnDisable()
 	-- Called when the addon is disabled
 end
-
+--[[
+-- Returns two requests to the WoW API that are required
+-- for pulling the affixes for the week.
+]]--
+function initialRequestsForEvents()
+    return C_MythicPlus.RequestMapInfo(), C_MythicPlus.GetCurrentAffixes()
+end
 
 function getDate()
     -- Get Date of Instance Run
@@ -64,14 +78,26 @@ end
 function Keydex:CHALLENGE_MODE_START()
     exportOutput = toCSV(csvDataStruct())
 end
-
 Keydex:RegisterEvent("CHALLENGE_MODE_START");
 
 function Keydex:CHALLENGE_MODE_COMPLETED()
     StaticPopup_Show ("KEYDEX_COPYWINDOW")
 end
-
 Keydex:RegisterEvent("CHALLENGE_MODE_COMPLETED");
+
+--[[
+-- Returns getAffixIds() table of affixes 5 seconds after
+-- the event "MYTHIC_PLUS_CURRENT_AFFIX_UPDATE" is fired.
+-- This event is naturally fired at the start of each M+
+-- run, but also manually on the initialization of Keydex
+-- via Keydex:OnInitialize() by way of a call to 
+-- initialRequestsForEvents().
+]]
+function Keydex:MYTHIC_PLUS_CURRENT_AFFIX_UPDATE()
+    C_Timer.After(5, getAffixIds)
+end
+Keydex:RegisterEvent("MYTHIC_PLUS_CURRENT_AFFIX_UPDATE")
+
 
 
 StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {

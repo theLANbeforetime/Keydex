@@ -26,23 +26,25 @@ local affixNameTbl = {
 }
 
 
+
 --[[
 -- Returns a table of weekly Affixes after making a request to
 -- the WoW API for RequestMapInfo. See:
 -- https://wowpedia.fandom.com/wiki/API_C_MythicPlus.RequestMapInfo
 -- The data for affixes does not populate until RequestMapInfo
--- triggers the in-game event CHALLENGE_MODE_MAPS_UPDATE.
+-- triggers the in-game event CHALLENGE_MODE_MAPS_UPDATE or
+-- MYTHIC_PLUS_CURRENT_AFFIX_UPDATE
 ]]
 function getAffixIds()
-    local request = C_MythicPlus.RequestMapInfo() 
-    local affixes = C_MythicPlus.GetCurrentAffixes()
+    C_MythicPlus.RequestMapInfo()
+    affixes = C_MythicPlus.GetCurrentAffixes()
 
     for _,tbl in pairs(affixes) do
        local id = tbl["id"] or nil
        if id ~= nil then
           table.insert(currentAffixesTbl, id)            
        end
-    end     
+    end    
  end
 
 --[[
