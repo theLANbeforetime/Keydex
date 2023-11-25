@@ -202,8 +202,8 @@ end
 
 ]]
 function checkKeyResult()
-    mapChallengeModeID, level, time, onTime = C_ChallengeMode.GetCompletionInfo()
-    isFull = C_PartyInfo.IsPartyFull()
+    local mapChallengeModeID, level, time, onTime = C_ChallengeMode.GetCompletionInfo()
+    local isFull = C_PartyInfo.IsPartyFull()
     if isFull ~= false then
         if onTime == true then
             return "Timed"
