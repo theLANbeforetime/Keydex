@@ -84,7 +84,7 @@ end
 function getCurrentMap()
     local mapChallengeModeID = C_ChallengeMode.GetActiveChallengeMapID()
     if mapChallengeModeID == 0 then
-        mapChallengeModeID = 9999
+        mapChallengeModeID = 0999
     elseif mapChallengeModeID == nil then
         mapChallengeModeID  = 9999
     end
@@ -103,9 +103,9 @@ end
 -- @param mapId current challenge mode map id of user
 ]]
 function translateMapID(mapId)
-    local dungeonNameTable = {}
+    local challengeModeMapTbl = {}
     if mapId ~= 9999 then
-        dungeonNameTable = {
+        challengeModeMapTbl = {
             [402]	=	"Algeth'ar Academy",
             [244]	=	"Atal'Dazar",
             [164]	=	"Auchindoun",
@@ -171,9 +171,12 @@ function translateMapID(mapId)
             [402]	=	"Waycrest Manor",
             [438]   =   "Vortex Pinnacle"
         }
-    else dungeonNameTable[mapId] = "NoData"
+    elseif mapId == 9999 then
+        name = GetInstanceInfo()
+        challengeModeMapTbl[mapId] = name
+    else challengeModeMapTbl[mapId] = "NoData"
     end
-    return dungeonNameTable[mapId]
+    return challengeModeMapTbl[mapId]
 end
 
 -- Returns TimeLimit of the Key in Seconds
