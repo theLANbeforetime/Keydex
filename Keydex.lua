@@ -147,7 +147,8 @@ StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {
     sheetTable[11] = sortPartyRolesAndSpec("dps1")
     sheetTable[12] = sortPartyRolesAndSpec("dps2")
     sheetTable[13] = sortPartyRolesAndSpec("dps3")
-    
+    sheetTable[14] = checkIO("old")
+    sheetTable[15] = checkIO("new")    
     return sheetTable
 end
 

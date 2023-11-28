@@ -2,6 +2,7 @@
 
 Keydex converts each Mythic+ run into a CSV format and presents that information at the end of the dungeon via a pop-up text box that will allow the user to copy-paste the string into their spreadsheet of choice. Currently the add-on is very limited and there are many features (persistent database, table customization, in-game GUI) that have yet to be implemented.
 
+ ![Keydex_Modal](https://imgur.com/a/qieuh5x)
  
 ## Get Started
 

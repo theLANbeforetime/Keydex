@@ -214,3 +214,19 @@ function checkKeyResult()
         return "Abandon"
     end
 end
+
+--[[
+-- Returns the io before the dungeon or after the dungeon
+-- depending on the request given.
+--
+-- @param request the requested time of before or after the dungeon.
+]]
+
+function checkIO(request)
+    mapChallengeModeID, level, time, onTime, keystoneUpgradeLevels, practiceRun,
+    oldOverallDungeonScore, newOverallDungeonScore, IsMapRecord, IsAffixRecord,
+    PrimaryAffix, isEligibleForScore, members
+       = C_ChallengeMode.GetCompletionInfo()
+    if request == "old" and oldOverallDungeonScore ~= nil then return oldOverallDungeonScore else return "Old IO Not Found" end
+    if request == "new" and oldOverallDungeonScore ~= nil then return newOverallDungeonScore else return "New IO Not Found" end
+end
