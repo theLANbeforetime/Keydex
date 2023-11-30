@@ -227,6 +227,11 @@ function checkIO(request)
     oldOverallDungeonScore, newOverallDungeonScore, IsMapRecord, IsAffixRecord,
     PrimaryAffix, isEligibleForScore, members
        = C_ChallengeMode.GetCompletionInfo()
-    if request == "old" and oldOverallDungeonScore ~= nil then return oldOverallDungeonScore else return "Old IO Not Found" end
-    if request == "new" and newOverallDungeonScore ~= nil then return newOverallDungeonScore else return "New IO Not Found" end
+    if request == "old" and oldOverallDungeonScore ~= nil then 
+        return oldOverallDungeonScore  
+    elseif request =="new" and newOverallDungeonScore ~= nil then
+        return newOverallDungeonScore
+    else
+        return "IO Not Found"
+    end
 end
