@@ -37,7 +37,7 @@ local affixNameTbl = {
 ]]
 function getAffixIds()
     C_MythicPlus.RequestMapInfo()
-    affixes = C_MythicPlus.GetCurrentAffixes()
+    local affixes = C_MythicPlus.GetCurrentAffixes()
 
     for _,tbl in pairs(affixes) do
        local id = tbl["id"] or nil
@@ -56,7 +56,7 @@ function getAffixIds()
  function translateAffixIds(affixesTable)
     getAffixIds()
     for _,id in ipairs(affixesTable) do
-       translatedId = affixNameTbl[id] or nil
+       local translatedId = affixNameTbl[id] or nil
        table.insert(translatedTbl, translatedId)
     end
     return translatedTbl
@@ -72,7 +72,7 @@ function getAffixIds()
 -- @param affix_level level of affix
  ]]
 function getWeeklyAffixes(affix_level)
-    weeklyAffixesTbl = translateAffixIds(currentAffixesTbl)
+    local weeklyAffixesTbl = translateAffixIds(currentAffixesTbl)
     return weeklyAffixesTbl[affix_level]
 end
 
@@ -223,10 +223,10 @@ end
 ]]
 
 function checkIO(request)
-    mapChallengeModeID, level, time, onTime, keystoneUpgradeLevels, practiceRun,
+    local mapChallengeModeID, level, time, onTime, keystoneUpgradeLevels, practiceRun,
     oldOverallDungeonScore, newOverallDungeonScore, IsMapRecord, IsAffixRecord,
     PrimaryAffix, isEligibleForScore, members
        = C_ChallengeMode.GetCompletionInfo()
     if request == "old" and oldOverallDungeonScore ~= nil then return oldOverallDungeonScore else return "Old IO Not Found" end
-    if request == "new" and oldOverallDungeonScore ~= nil then return newOverallDungeonScore else return "New IO Not Found" end
+    if request == "new" and newOverallDungeonScore ~= nil then return newOverallDungeonScore else return "New IO Not Found" end
 end
