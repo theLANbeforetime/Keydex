@@ -34,7 +34,7 @@ end
 function getDate()
     -- Get Date of Instance Run
 
-    currentDate = date("%m/%d/%y")
+    local currentDate = date("%m/%d/%y")
     return currentDate
 end
 
