@@ -1,2 +1,2 @@
 # Keydex
-World of Warcraft Mythic+ Key Data Analysis Add-On
+Moved to GitLab: https://gitlab.com/traxxonstecklein/Keydex
