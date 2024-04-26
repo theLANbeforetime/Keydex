@@ -4,13 +4,11 @@
 Keydex = LibStub("AceAddon-3.0"):NewAddon("Keydex", "AceConsole-3.0", "AceEvent-3.0")
 openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
 
---[[
--- Code that is ran on the initialization of the addon.
--- After 5 seconds sends the initial requests to the 
--- WoW API for C_MythicPlus.RequestMapInfo() and 
--- C_MythicPlus.GetCurrentAffixes(). This triggers 
--- the event "MYTHIC_PLUS_CURRENT_AFFIX_UPDATE".
-]]
+---Code that is ran on the initialization of the addon.
+--- After 5 seconds sends the initial requests to the 
+--- WoW API for C_MythicPlus.RequestMapInfo() and 
+--- C_MythicPlus.GetCurrentAffixes(). This triggers 
+--- the event "MYTHIC_PLUS_CURRENT_AFFIX_UPDATE".
 function Keydex:OnInitialize()
     C_Timer.After(5, initialRequestsForEvents)
 
@@ -23,10 +21,11 @@ end
 function Keydex:OnDisable()
 	-- Called when the addon is disabled
 end
+
 --[[
--- Returns two requests to the WoW API that are required
--- for pulling the affixes for the week.
-]]--
+   Returns two requests to the WoW API that are required
+   for pulling the affixes for the week.
+]]
 function initialRequestsForEvents()
     return C_MythicPlus.RequestMapInfo(), C_MythicPlus.GetCurrentAffixes()
 end
@@ -114,25 +113,24 @@ StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {
     preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
   }
 
+-- Builder that constructs the CSV utilized in the StaticPopupDialog
   
- function csvDataStruct()
-    -- Function to build the CSV data we push out into the StaticDiaglogPopup
-    
+function csvDataStruct()
     local sheetTable = {}
     -- Table will not print after null value.
     sheetTable[1] = getDate()
     sheetTable[2] = getPlayerInformation("playerName")
     sheetTable[3] = translateMapID(getCurrentMap())
     sheetTable[4] = getCurrentKeyLevel()
-    if getCurrentKeyLevel() <= 6 then
+    if getCurrentKeyLevel() <= 2 then
         sheetTable[5] = getWeeklyAffixes(1)
         sheetTable[6] = ''
         sheetTable[7] = ''
-    elseif (getCurrentKeyLevel() >= 7 and getCurrentKeyLevel() <=13) then
+    elseif (getCurrentKeyLevel() >= 5 and getCurrentKeyLevel() <=9) then
         sheetTable[5] = getWeeklyAffixes(1)
         sheetTable[6] = getWeeklyAffixes(2)
         sheetTable[7] = ''
-    elseif getCurrentKeyLevel() >= 14 then
+    elseif getCurrentKeyLevel() >= 10 then
         sheetTable[5] = getWeeklyAffixes(1)
         sheetTable[6] = getWeeklyAffixes(2)
         sheetTable[7] = getWeeklyAffixes(3)
