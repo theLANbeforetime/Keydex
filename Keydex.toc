@@ -1,7 +1,7 @@
-## Interface: 100206
+## Interface: 110000
 ## Title: Keydex
 ## Notes: Add-On to easily port Mythic+ Key Information.
-## Version: 0.0.2
+## Version: 1.0.0
 ## Author: Ardryst
 ## IconAtlas: BonusChest-KeyholeGlow
 

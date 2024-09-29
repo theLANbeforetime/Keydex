@@ -123,30 +123,45 @@ function csvDataStruct()
     sheetTable[3] = translateMapID(getCurrentMap())
     sheetTable[4] = getCurrentKeyLevel()
     if getCurrentKeyLevel() <= 2 then
-        sheetTable[5] = getWeeklyAffixes(1)
+        sheetTable[5] = getWeeklyAffixes(1) --Xalatath's Bargain
         sheetTable[6] = ''
         sheetTable[7] = ''
-    elseif (getCurrentKeyLevel() >= 5 and getCurrentKeyLevel() <=9) then
-        sheetTable[5] = getWeeklyAffixes(1)
-        sheetTable[6] = getWeeklyAffixes(2)
+        sheetTable[8] = ''
+    elseif (getCurrentKeyLevel() >= 4 and getCurrentKeyLevel() <=6) then
+        sheetTable[5] = getWeeklyAffixes(1) -- Xalatath's Bargain
+        sheetTable[6] = getWeeklyAffixes(2) -- Fortified/Tyrannical
         sheetTable[7] = ''
-    elseif getCurrentKeyLevel() >= 10 then
-        sheetTable[5] = getWeeklyAffixes(1)
-        sheetTable[6] = getWeeklyAffixes(2)
-        sheetTable[7] = getWeeklyAffixes(3)
+        sheetTable[8] = ''
+    elseif (getCurrentKeyLevel() >= 7 and getCurrentKeyLevel() <=9) then
+        sheetTable[5] = getWeeklyAffixes(1) -- Xalatath's Bargain
+        sheetTable[6] = getWeeklyAffixes(2) -- Fortified/Tyranical
+        sheetTable[7] = ''
+        sheetTable[8] = getWeeklyAffixes(3) -- Challenger's Peril
+    elseif (getCurrentKeyLevel() >= 10 and getCurrentKeyLevel() <=11) then
+        sheetTable[5] = getWeeklyAffixes(1) -- Xalatath's Bargain
+        sheetTable[6] = getWeeklyAffixes(2) -- Fortified/Tyranical
+        sheetTable[7] = getWeeklyAffixes(4) -- Foritified/Tyrannical
+        sheetTable[8] = getWeeklyAffixes(3) -- Challenger's Peril
+    elseif (getCurrentKeyLevel() >= 12) then
+        sheetTable[5] = getWeeklyAffixes(5) -- Xalatath's Guile
+        sheetTable[6] = getWeeklyAffixes(2) -- Fortified/Tyranical
+        sheetTable[7] = getWeeklyAffixes(3) -- Challenger's Peril
+        sheetTable[8] = getWeeklyAffixes(4) -- Foritified/Tyrannical
     else
         sheetTable[5] = ''
         sheetTable[6] = ''
         sheetTable[7] = ''
+        sheetTable[8] = ''
+
     end
-    sheetTable[8] = checkKeyResult()
-    sheetTable[9] = sortPartyRolesAndSpec("tank")
-    sheetTable[10] = sortPartyRolesAndSpec("healer")
-    sheetTable[11] = sortPartyRolesAndSpec("dps1")
-    sheetTable[12] = sortPartyRolesAndSpec("dps2")
-    sheetTable[13] = sortPartyRolesAndSpec("dps3")
-    sheetTable[14] = checkIO("old")
-    sheetTable[15] = checkIO("new")    
+    sheetTable[9] = checkKeyResult()
+    sheetTable[10] = sortPartyRolesAndSpec("tank")
+    sheetTable[11] = sortPartyRolesAndSpec("healer")
+    sheetTable[12] = sortPartyRolesAndSpec("dps1")
+    sheetTable[13] = sortPartyRolesAndSpec("dps2")
+    sheetTable[14] = sortPartyRolesAndSpec("dps3")
+    sheetTable[15] = checkIO("old")
+    sheetTable[16] = checkIO("new")    
     return sheetTable
 end
 

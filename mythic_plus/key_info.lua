@@ -23,12 +23,12 @@ local affixNameTbl = {
     [134] = "Entangling",
     [135] = "Afflicted",
     [136] = "Incorporeal",
-    [147] = "Xal'atath's Guile",
-    [148] = "Xal'atath's Bargain: Ascendant",
+    [147] = "Xal'atath's Guile", -- Replace's level 2 affix (Xal'atath's Bargain) at 12+
+    [148] = "Ascendant", -- Xal'atath's Bargain
     [152] = "Challenger's Peril",
-    [158] = "Xal'atath's Bargain: Voidbound",
-    [159] = "Xal'atath's Bargain: Oblivion",
-    [160] = "Xal'atath's Bargain: Devour"
+    [158] = "Voidbound", -- Xal'atath's Bargain
+    [159] = "Oblivion", -- Xal'atath's Bargain
+    [160] = "Devour" -- Xal'atath's Bargain
 }
 
 

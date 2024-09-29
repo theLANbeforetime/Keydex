@@ -2,7 +2,8 @@
 
 Keydex converts each Mythic+ run into a CSV format and presents that information at the end of the dungeon via a pop-up text box that will allow the user to copy-paste the string into their spreadsheet of choice. Currently the add-on is very limited and there are many features (persistent database, table customization, in-game GUI) that have yet to be implemented.
 
- ![Keydex_Modal](https://imgur.com/a/qieuh5x)
+In-Game pop-up post dungeon run:
+ ![Example Pop-up](https://i.imgur.com/X4ec283.png)
  
 ## Get Started
 
@@ -12,20 +13,23 @@ Once in game, simply run a Mythic+ key and at the end of the run a box will pop-
 
 Pasting into Google Sheets puts all the data into the same cell, to split the data into individual cells go to `Data` -> `Split text to columns` and it will separate the CSV into the proper columns.
 
-The format of the CSV is currently static and are as follows:
+The format of the CSV is currently static and is as follows:
 1. Current Date
 2. Player Name
 3. Dungeon Name
 4. Keystone Level
-5. Affix 1 (if key below 6)
-6. Affix 2 (if key above 6 but less than 13 or blank)
-7. Affix 3 (13 and up or blank)
-8. Key Result (Timed/Deplete/Abandon)
-9. Tank Spec
-10. Healer Spec
-11. First Dps Spec
-12. Second Dps Spec
-13 Third Dps Spec
+5. Affix 1 (Xalatath's Bargain / Guile)
+6. Affix 2 (Fortified or Tyrannical)
+7. Affix 3 (Fortified or Tyrannical)
+8. Affix 4 (Challenger's Peril)
+9. Key Result (Timed/Deplete/Abandon)
+10. Tank Spec
+11. Healer Spec
+12. First Dps Spec
+13. Second Dps Spec
+14. Third Dps Spec
+15. IO at the Start
+16. IO at the End
 
 #### Note: Eventually the placement of the fields in the CSV output will be changeable by the user via the GUI.
 
