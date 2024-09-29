@@ -22,7 +22,13 @@ local affixNameTbl = {
     [124] = "Storming",
     [134] = "Entangling",
     [135] = "Afflicted",
-    [136] = "Incorporeal"
+    [136] = "Incorporeal",
+    [147] = "Xal'atath's Guile",
+    [148] = "Xal'atath's Bargain: Ascendant",
+    [152] = "Challenger's Peril",
+    [158] = "Xal'atath's Bargain: Voidbound",
+    [159] = "Xal'atath's Bargain: Oblivion",
+    [160] = "Xal'atath's Bargain: Devour"
 }
 
 
@@ -63,11 +69,13 @@ function getAffixIds()
  end 
 
  --[[
--- Returns the name of the affix for the level (1, 2, 3)
+-- Returns the name of the affix for the level (1, 2, 3, 4, 5)
 -- that is passed in. 
 -- Level 1 affix starts at Keystone Level 2.
--- Level 2 affix starts at Keystone level 7.
--- Level 3 affix starts at Keystone level 14
+-- Level 2 affix starts at Keystone level 4.
+-- Level 3 affix starts at Keystone level 7.
+-- Level 4 affix starts at Keystone level 10.
+-- Level 5 affix starts at Keystone level 12.
 
 -- @param affix_level level of affix
  ]]
@@ -109,13 +117,17 @@ function translateMapID(mapId)
     if mapId ~= 9999 then
         challengeModeMapTbl = {
             [402]	=	"Algeth'ar Academy",
+            [503]   =   "Ara-Kara, City of Echoes",
             [244]	=	"Atal'Dazar",
             [164]	=	"Auchindoun",
             [199]	=	"Black Rook Hold",
             [163]	=	"Bloodmaul Slag Mines",
             [405]	=	"Brackenhide Hollow",
             [233]	=	"Cathedral of Eternal Night",
+            [502]   =   "City of Threads",
+            [506]   =   "Cinderbew Meadery",
             [210]	=	"Court of Stars",
+            [504]   =   "Darkflame Cleft",
             [198]	=	"Darkheart Thicket",
             [463]   =   "Dawn of the Infinite: Galakrond's Fall",
             [464]   =   "Dawn of the Infinite: Murozond's Rise",
@@ -137,6 +149,7 @@ function translateMapID(mapId)
             [369]	=	"Operation: Mechagon - Junkyard",
             [370]	=	"Operation: Mechagon - Workshop",
             [379]	=	"Plaguefall",
+            [499]   =   "Priory of the Sacred Flame",
             [227]	=	"Return to Karazhan: Lower",
             [234]	=	"Return to Karazhan: Upper",
             [399]	=	"Ruby Life Pools",
@@ -156,16 +169,19 @@ function translateMapID(mapId)
             [392]	=	"Tazavesh: So'leah's Gambit",
             [391]	=	"Tazavesh: Streets of Wonder",
             [250]	=	"Temple of Sethraliss",
-            [2]	=	"Temple of the Jade Serpent",
+            [2]	    =	"Temple of the Jade Serpent",
             [209]	=	"The Arcway",
             [401]	=	"The Azure Vault",
+            [505]   =   "The Dawnbreaker",
             [168]	=	"The Everbloom",
             [247]	=	"The MOTHERLODE!!",
             [376]	=	"The Necrotic Wake",
             [400]	=	"The Nokhud Offensive",
+            [500]   =   "The Rookery",
+            [501]   =   "The Stonevault",
             [251]	=	"The Underrot",
             [382]	=	"Theater of Pain",
-            [456]      =   "Throne of the Tides",
+            [456]   =   "Throne of the Tides",
             [246]	=	"Tol Dagor",
             [403]	=	"Uldaman: Legacy of Tyr",
             [167]	=	"Upper Blackrock Spire",
