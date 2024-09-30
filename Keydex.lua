@@ -119,7 +119,7 @@ function csvDataStruct()
     local sheetTable = {}
     -- Table will not print after null value.
     sheetTable[1] = getDate()
-    sheetTable[2] = getPlayerInformation("playerName")
+    sheetTable[2] = GetPlayerInformation("playerName")
     sheetTable[3] = translateMapID(getCurrentMap())
     sheetTable[4] = getCurrentKeyLevel()
     if getCurrentKeyLevel() <= 2 then
