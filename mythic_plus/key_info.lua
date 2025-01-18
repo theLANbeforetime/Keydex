@@ -146,6 +146,7 @@ function translateMapID(mapId)
             [60]	=	"Mogu'shan Palace",
             [206]	=	"Neltharion's Lair",
             [404]	=	"Neltharus",
+            [525]   =   "Operation: Floodgate",
             [369]	=	"Operation: Mechagon - Junkyard",
             [370]	=	"Operation: Mechagon - Workshop",
             [379]	=	"Plaguefall",
