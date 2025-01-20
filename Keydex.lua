@@ -34,7 +34,7 @@ end
 
 -- Simple function used to get the date in mm/dd/yyyy format.
 -- @return the current date.
-function getDate()
+function GetDate()
     local currentDate = date("%m/%d/%y")
     return currentDate
 end
@@ -121,7 +121,7 @@ Keydex:RegisterEvent("CHALLENGE_MODE_COMPLETED");
 -- run, but also manually on the initialization of Keydex
 -- via Keydex:OnInitialize(). 
 function Keydex:MYTHIC_PLUS_CURRENT_AFFIX_UPDATE()
-    C_Timer.After(5, getAffixIds)
+    C_Timer.After(5, GetAffixIds())
 end
 
 -- Registers the "MYTHIC_PLUS_CURRENT_AFFIX_UPDATE" WoW event with Keydex
@@ -153,35 +153,35 @@ StaticPopupDialogs["KEYDEX_COPYWINDOW"] = {
 -- finish populating the rest of the table.
 function csvDataStruct()
     local sheetTable = {}
-    sheetTable[1] = getDate()
+    sheetTable[1] = GetDate()
     sheetTable[2] = GetPlayerInformation("playerName")
-    sheetTable[3] = translateMapID(getCurrentMap())
-    sheetTable[4] = getCurrentKeyLevel()
-    if getCurrentKeyLevel() <= 2 then
-        sheetTable[5] = getWeeklyAffixes(1) --Xalatath's Bargain
+    sheetTable[3] = TranslateMapID(GetCurrentMap())
+    sheetTable[4] = GetCurrentKeyLevel()
+    if GetCurrentKeyLevel() <= 2 then
+        sheetTable[5] = GetWeeklyAffixes(1) --Xalatath's Bargain
         sheetTable[6] = ''
         sheetTable[7] = ''
         sheetTable[8] = ''
-    elseif (getCurrentKeyLevel() >= 4 and getCurrentKeyLevel() <=6) then
-        sheetTable[5] = getWeeklyAffixes(1) -- Xalatath's Bargain
-        sheetTable[6] = getWeeklyAffixes(2) -- Fortified/Tyrannical
+    elseif (GetCurrentKeyLevel() >= 4 and GetCurrentKeyLevel() <=6) then
+        sheetTable[5] = GetWeeklyAffixes(1) -- Xalatath's Bargain
+        sheetTable[6] = GetWeeklyAffixes(2) -- Fortified/Tyrannical
         sheetTable[7] = ''
         sheetTable[8] = ''
-    elseif (getCurrentKeyLevel() >= 7 and getCurrentKeyLevel() <=9) then
-        sheetTable[5] = getWeeklyAffixes(1) -- Xalatath's Bargain
-        sheetTable[6] = getWeeklyAffixes(2) -- Fortified/Tyranical
+    elseif (GetCurrentKeyLevel() >= 7 and GetCurrentKeyLevel() <=9) then
+        sheetTable[5] = GetWeeklyAffixes(1) -- Xalatath's Bargain
+        sheetTable[6] = GetWeeklyAffixes(2) -- Fortified/Tyranical
         sheetTable[7] = ''
-        sheetTable[8] = getWeeklyAffixes(3) -- Challenger's Peril
-    elseif (getCurrentKeyLevel() >= 10 and getCurrentKeyLevel() <=11) then
-        sheetTable[5] = getWeeklyAffixes(1) -- Xalatath's Bargain
-        sheetTable[6] = getWeeklyAffixes(2) -- Fortified/Tyranical
-        sheetTable[7] = getWeeklyAffixes(4) -- Foritified/Tyrannical
-        sheetTable[8] = getWeeklyAffixes(3) -- Challenger's Peril
-    elseif (getCurrentKeyLevel() >= 12) then
-        sheetTable[5] = getWeeklyAffixes(5) -- Xalatath's Guile
-        sheetTable[6] = getWeeklyAffixes(2) -- Fortified/Tyranical
-        sheetTable[7] = getWeeklyAffixes(3) -- Challenger's Peril
-        sheetTable[8] = getWeeklyAffixes(4) -- Foritified/Tyrannical
+        sheetTable[8] = GetWeeklyAffixes(3) -- Challenger's Peril
+    elseif (GetCurrentKeyLevel() >= 10 and GetCurrentKeyLevel() <=11) then
+        sheetTable[5] = GetWeeklyAffixes(1) -- Xalatath's Bargain
+        sheetTable[6] = GetWeeklyAffixes(2) -- Fortified/Tyranical
+        sheetTable[7] = GetWeeklyAffixes(4) -- Foritified/Tyrannical
+        sheetTable[8] = GetWeeklyAffixes(3) -- Challenger's Peril
+    elseif (GetCurrentKeyLevel() >= 12) then
+        sheetTable[5] = GetWeeklyAffixes(5) -- Xalatath's Guile
+        sheetTable[6] = GetWeeklyAffixes(2) -- Fortified/Tyranical
+        sheetTable[7] = GetWeeklyAffixes(3) -- Challenger's Peril
+        sheetTable[8] = GetWeeklyAffixes(4) -- Foritified/Tyrannical
     else
         sheetTable[5] = ''
         sheetTable[6] = ''
@@ -189,14 +189,14 @@ function csvDataStruct()
         sheetTable[8] = ''
 
     end
-    sheetTable[9] = checkKeyResult()
+    sheetTable[9] = CheckKeyResult()
     sheetTable[10] = sortPartyRolesAndSpec("tank")
     sheetTable[11] = sortPartyRolesAndSpec("healer")
     sheetTable[12] = sortPartyRolesAndSpec("dps1")
     sheetTable[13] = sortPartyRolesAndSpec("dps2")
     sheetTable[14] = sortPartyRolesAndSpec("dps3")
-    sheetTable[15] = checkIO("old")
-    sheetTable[16] = checkIO("new")
+    sheetTable[15] = CheckIO("old")
+    sheetTable[16] = CheckIO("new")
     return sheetTable
 end
 

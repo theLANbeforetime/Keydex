@@ -13,6 +13,8 @@ Once in game, simply run a Mythic+ key and at the end of the run a box will pop-
 
 Pasting into Google Sheets puts all the data into the same cell, to split the data into individual cells go to `Data` -> `Split text to columns` and it will separate the CSV into the proper columns.
 
+Here is a template that will work as plug & play after you make a your own copy: [M+ Keydex Template](https://docs.google.com/spreadsheets/d/1zfLHkkAbd7d9lMAfayiqEU-79U6GN5YUMAq6N0X-LvM/edit?usp=sharing)
+
 The format of the CSV is currently static and is as follows:
 1. Current Date
 2. Player Name
