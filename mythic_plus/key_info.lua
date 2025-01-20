@@ -1,5 +1,7 @@
+-- All C_<> are unndefined globals and are calls to the WoW API meant to be ran
+-- in the game.
+
 -- Instantiate tables
-local weeklyAffixesTbl = {}
 local translatedTbl = {}
 local currentAffixesTbl = {}
 local affixNameTbl = {
@@ -31,88 +33,64 @@ local affixNameTbl = {
     [160] = "Devour" -- Xal'atath's Bargain
 }
 
-
-
---[[
--- Returns a table of weekly Affixes after making a request to
--- the WoW API for RequestMapInfo. See:
--- https://wowpedia.fandom.com/wiki/API_C_MythicPlus.RequestMapInfo
--- The data for affixes does not populate until RequestMapInfo
--- triggers the in-game event CHALLENGE_MODE_MAPS_UPDATE or
--- MYTHIC_PLUS_CURRENT_AFFIX_UPDATE
-]]
-function getAffixIds()
+---Makes a call to WoW API to get the map info which then allows a call
+---to get the current affixes. The data for affixes does NOT populate until
+---a successful RequestMapInfo call. It then updates the global table with the 
+---affixes for the week.
+---See: https://wowpedia.fandom.com/wiki/API_C_MythicPlus.RequestMapInfo
+--- Related events: CHALLENGE_MODE_MAPS_UPDATE or MYTHIC_PLUS_CURRENT_AFFIX_UPDATE
+function GetAffixIds()
     C_MythicPlus.RequestMapInfo()
     local affixes = C_MythicPlus.GetCurrentAffixes()
 
     for _,tbl in pairs(affixes) do
        local id = tbl["id"] or nil
        if id ~= nil then
-          table.insert(currentAffixesTbl, id)            
+          table.insert(currentAffixesTbl, id)
        end
-    end    
+    end
  end
 
---[[
--- Returns a table of the translated weekly affix names derived
--- from the affix ids.
---
--- @param affixesTable the weeks current affixes
-]]
- function translateAffixIds(affixesTable)
-    getAffixIds()
+--- Organizes the weekly affix ids into a table of affix strings for consumption.
+---@param affixesTable table table of affixes in id format
+---@return table translatedTbl table of affixes in string format
+ function TranslateAffixIds(affixesTable)
+    GetAffixIds()
     for _,id in ipairs(affixesTable) do
        local translatedId = affixNameTbl[id] or nil
        table.insert(translatedTbl, translatedId)
     end
     return translatedTbl
- end 
+ end
 
- --[[
--- Returns the name of the affix for the level (1, 2, 3, 4, 5)
--- that is passed in. 
--- Level 1 affix starts at Keystone Level 2.
--- Level 2 affix starts at Keystone level 4.
--- Level 3 affix starts at Keystone level 7.
--- Level 4 affix starts at Keystone level 10.
--- Level 5 affix starts at Keystone level 12.
-
--- @param affix_level level of affix
- ]]
-function getWeeklyAffixes(affix_level)
-    local weeklyAffixesTbl = translateAffixIds(currentAffixesTbl)
+ ---Pulls the affix name from the weekly affixes based 
+ ---which position the affix is.
+ ---@param affix_level integer the position of the affix you want to pull (1, 2, 3, 4, or 5.)
+ ---@return string affix_name the name of the affix for the affix_level pulled
+function GetWeeklyAffixes(affix_level)
+    --TODO: Kind of nested might want to refactor and clean up the call tree.
+    local weeklyAffixesTbl = TranslateAffixIds(currentAffixesTbl)
     return weeklyAffixesTbl[affix_level]
 end
 
-
---[[ 
--- Returns the challenge mode map id based on the players 
--- current location. If player is not in a dungeon at the
--- time of the call (id=0 or nil) the function returns the
--- dummy value of 9999.
-]]
-function getCurrentMap()
-    local mapChallengeModeID = C_ChallengeMode.GetActiveChallengeMapID()
-    if mapChallengeModeID == 0 then
-        mapChallengeModeID = 0999
-    elseif mapChallengeModeID == nil then
-        mapChallengeModeID  = 9999
+---Utilizes call to WoW API to get active keystone map id.
+---@return integer mapChallengeModeId integer representation of current map
+function GetCurrentMap()
+    local mapChallengeModeId = C_ChallengeMode.GetActiveChallengeMapID()
+    if mapChallengeModeId == 0 then
+        mapChallengeModeId = 0999
+    elseif mapChallengeModeId == nil then
+        mapChallengeModeId  = 9999
     end
-    return  mapChallengeModeID
+    return  mapChallengeModeId
 end
 
---[[ 
--- Returns the translated challenge mode map id to dungeon name.
--- Map id is pulled from getCurrentMap() and if player is not
--- in a dungeon for the call or the function returns nil a dummy 
--- value of 9999 is provided.
--- Dummy value of 9999 returns 'NoData' to csvDataStruct().
--- List of current challenge maps pulled from Wago Tools. See:
--- https://wago.tools/db2/MapChallengeMode
---
--- @param mapId current challenge mode map id of user
-]]
-function translateMapID(mapId)
+---Converts the challenge mode map id from an integer to a string.
+---If the data cannot be pulled then a value of 9999 is returned.
+---Maps are pulled from Wago Tools: https://wago.tools/db2/MapChallengeMode
+---@param mapId integer the id from the GetCurrentMap() call 
+---@return string mapName the name of the challenge mode map
+function TranslateMapID(mapId)
     local challengeModeMapTbl = {}
     if mapId ~= 9999 then
         challengeModeMapTbl = {
@@ -187,44 +165,45 @@ function translateMapID(mapId)
             [403]	=	"Uldaman: Legacy of Tyr",
             [167]	=	"Upper Blackrock Spire",
             [207]	=	"Vault of the Wardens",
-            [402]	=	"Waycrest Manor",
+            [248]	=	"Waycrest Manor",
             [438]   =   "Vortex Pinnacle"
         }
     elseif mapId == 9999 then
-        name = GetInstanceInfo()
+        -- GetInstanceInfo() is a WoW API call: https://wowwiki-archive.fandom.com/wiki/API_GetInstanceInfo
+        local name = GetInstanceInfo()
         challengeModeMapTbl[mapId] = name
     else challengeModeMapTbl[mapId] = "NoData"
     end
     return challengeModeMapTbl[mapId]
 end
 
--- Returns TimeLimit of the Key in Seconds
-function getKeyTimeLimit()
+
+
+---Requests the time limit of the current active keystone.
+---@return integer timelimit measured in seconds
+function GetKeyTimeLimit()
     local map = C_ChallengeMode.GetCompletionInfo()
-    local name, id, timeLimit = C_ChallengeMode.GetMapUIInfo(getCurrentMap())
+    local name, id, timeLimit = C_ChallengeMode.GetMapUIInfo(GetCurrentMap())
     return timeLimit
 end
 
--- Returns current keystone level of keystone in player's inventory
-function getCurrentKeyLevel()
+---Returns the keystone level of the active key.
+---@return integer level returns level of active keystone i.e. +10 -> 10
+function GetCurrentKeyLevel()
     local activeKeystoneLevel, activeAffixIDs, wasActiveKeystoneCharged = C_ChallengeMode.GetActiveKeystoneInfo()
     return activeKeystoneLevel
 end
 
---[[
--- Returns the value of "Timed" or "Deplete" or "Abandon"
--- depending on if a key is completed within time (Timed), 
--- completed but not in time (Deplete), or if the players
--- disband the party before completion (Abandon).
-
-]]
-function checkKeyResult()
-    local mapChallengeModeID, level, time, onTime = C_ChallengeMode.GetCompletionInfo()
+---Checks the result of the key at the end. 
+---Assumes that if the party is not full the key is an Abandon.
+---@return string result final result of the key if it was timed, depleted, or abandoned.
+function CheckKeyResult()
+    local mapChallengeModeId, level, time, onTime = C_ChallengeMode.GetCompletionInfo()
     local isFull = C_PartyInfo.IsPartyFull()
     if isFull ~= false then
         if onTime == true then
             return "Timed"
-        else 
+        else
             return "Deplete"
         end
     else
@@ -232,23 +211,20 @@ function checkKeyResult()
     end
 end
 
---[[
--- Returns the io before the dungeon or after the dungeon
--- depending on the request given.
---
--- @param request the requested time of before or after the dungeon.
-]]
-
-function checkIO(request)
-    local mapChallengeModeID, level, time, onTime, keystoneUpgradeLevels, practiceRun,
+---Makes a call to WoW API C_ChallengeMode.GetCompetionInfo to get
+---current players IO at the start of the dungeon and at the end of the dungeon.
+---@param request string either "new" or "old"
+---@return (integer|string) score returns score as integer (success) or string (fail)
+function CheckIO(request)
+    local mapChallengeModeId, level, time, onTime, keystoneUpgradeLevels, practiceRun,
     oldOverallDungeonScore, newOverallDungeonScore, IsMapRecord, IsAffixRecord,
     PrimaryAffix, isEligibleForScore, members
        = C_ChallengeMode.GetCompletionInfo()
-    if request == "old" and oldOverallDungeonScore ~= nil then 
-        return oldOverallDungeonScore  
-    elseif request =="new" and newOverallDungeonScore ~= nil then
+    if request == "old" and oldOverallDungeonScore ~= nil then
+        return oldOverallDungeonScore
+    elseif request == "new" and newOverallDungeonScore ~= nil then
         return newOverallDungeonScore
     else
-        return "IO Not Found"
+        return "Failed to pull IO"
     end
 end
