@@ -190,11 +190,11 @@ function csvDataStruct()
 
     end
     sheetTable[9] = CheckKeyResult()
-    sheetTable[10] = sortPartyRolesAndSpec("tank")
-    sheetTable[11] = sortPartyRolesAndSpec("healer")
-    sheetTable[12] = sortPartyRolesAndSpec("dps1")
-    sheetTable[13] = sortPartyRolesAndSpec("dps2")
-    sheetTable[14] = sortPartyRolesAndSpec("dps3")
+    sheetTable[10] = SortPartyRolesAndSpec("tank")
+    sheetTable[11] = SortPartyRolesAndSpec("healer")
+    sheetTable[12] = SortPartyRolesAndSpec("dps1")
+    sheetTable[13] = SortPartyRolesAndSpec("dps2")
+    sheetTable[14] = SortPartyRolesAndSpec("dps3")
     sheetTable[15] = CheckIO("old")
     sheetTable[16] = CheckIO("new")
     return sheetTable
