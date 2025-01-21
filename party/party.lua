@@ -1,5 +1,5 @@
 ---Uses Open Raid lib to query information about a party member.
----@param partyNum integer the placement of the party member (1-5)
+---@param partyNum string the placement of the party member (1-5)
 ---@param ... string the information to pull from the partyTable
 ---@return string partyInformation either name, role, specId, or ilvl
 function GetPartyInformation(partyNum, ...)
@@ -17,7 +17,7 @@ function GetPartyInformation(partyNum, ...)
 end
 
 ---Takes a party member and return their role/specId.
----@param partyNum integer the placement of the party member (1-5)
+---@param partyNum string the placement of the party member (party1-party5)
 ---@return table roleAndSpec the role (tank, healer, dps) and spec of the player
 function DeterminePartyRole(partyNum)
     local role = GetPartyInformation(partyNum, "partyRole")
@@ -146,7 +146,7 @@ function SortPartyRolesAndSpec(selector)
     local party2 = DeterminePartyRole("party2")
     local party3 = DeterminePartyRole("party3")
     local party4 = DeterminePartyRole("party4")
-    local player = DeterminePartyRole()
+    local player = DeterminePartyRole("player")
 
     local unsortedPartyTable = {party1, party2, party3, party4, player}
     local sortedPartyTable = {}

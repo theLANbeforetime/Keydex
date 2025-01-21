@@ -121,7 +121,7 @@ Keydex:RegisterEvent("CHALLENGE_MODE_COMPLETED");
 -- run, but also manually on the initialization of Keydex
 -- via Keydex:OnInitialize(). 
 function Keydex:MYTHIC_PLUS_CURRENT_AFFIX_UPDATE()
-    C_Timer.After(5, GetAffixIds())
+    C_Timer.After(5, GetAffixIds)
 end
 
 -- Registers the "MYTHIC_PLUS_CURRENT_AFFIX_UPDATE" WoW event with Keydex

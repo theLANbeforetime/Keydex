@@ -51,7 +51,7 @@ function GetAffixIds()
     end
  end
 
---- Organizes the weekly affix ids into a table of affix strings for consumption.
+---Organizes the weekly affix ids into a table of affix strings for consumption.
 ---@param affixesTable table table of affixes in id format
 ---@return table translatedTbl table of affixes in string format
  function TranslateAffixIds(affixesTable)
