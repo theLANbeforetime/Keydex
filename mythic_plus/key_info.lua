@@ -30,7 +30,8 @@ local affixNameTbl = {
     [152] = "Challenger's Peril",
     [158] = "Voidbound", -- Xal'atath's Bargain
     [159] = "Oblivion", -- Xal'atath's Bargain
-    [160] = "Devour" -- Xal'atath's Bargain
+    [160] = "Devour", -- Xal'atath's Bargain
+    [162] = "Pulsar" -- Xal'atath's Bargain
 }
 
 ---Makes a call to WoW API to get the map info which then allows a call

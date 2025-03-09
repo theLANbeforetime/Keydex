@@ -1,4 +1,4 @@
-## Interface: 110002
+## Interface: 110100
 ## Title: Keydex
 ## Notes: Add-On to easily port Mythic+ Key Information.
 ## Version: 1.0.0

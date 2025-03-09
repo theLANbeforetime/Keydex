@@ -157,31 +157,31 @@ function csvDataStruct()
     sheetTable[2] = GetPlayerInformation("playerName")
     sheetTable[3] = TranslateMapID(GetCurrentMap())
     sheetTable[4] = GetCurrentKeyLevel()
-    if GetCurrentKeyLevel() <= 2 then
-        sheetTable[5] = GetWeeklyAffixes(1) --Xalatath's Bargain
+    if GetCurrentKeyLevel() <= 3 then
+        sheetTable[5] = ''
         sheetTable[6] = ''
         sheetTable[7] = ''
         sheetTable[8] = ''
     elseif (GetCurrentKeyLevel() >= 4 and GetCurrentKeyLevel() <=6) then
         sheetTable[5] = GetWeeklyAffixes(1) -- Xalatath's Bargain
-        sheetTable[6] = GetWeeklyAffixes(2) -- Fortified/Tyrannical
+        sheetTable[6] = ''
         sheetTable[7] = ''
         sheetTable[8] = ''
     elseif (GetCurrentKeyLevel() >= 7 and GetCurrentKeyLevel() <=9) then
         sheetTable[5] = GetWeeklyAffixes(1) -- Xalatath's Bargain
         sheetTable[6] = GetWeeklyAffixes(2) -- Fortified/Tyranical
         sheetTable[7] = ''
-        sheetTable[8] = GetWeeklyAffixes(3) -- Challenger's Peril
+        sheetTable[8] = ''
     elseif (GetCurrentKeyLevel() >= 10 and GetCurrentKeyLevel() <=11) then
         sheetTable[5] = GetWeeklyAffixes(1) -- Xalatath's Bargain
         sheetTable[6] = GetWeeklyAffixes(2) -- Fortified/Tyranical
-        sheetTable[7] = GetWeeklyAffixes(4) -- Foritified/Tyrannical
-        sheetTable[8] = GetWeeklyAffixes(3) -- Challenger's Peril
+        sheetTable[7] = GetWeeklyAffixes(3) -- Foritified/Tyrannical
+        sheetTable[8] = ''
     elseif (GetCurrentKeyLevel() >= 12) then
         sheetTable[5] = GetWeeklyAffixes(5) -- Xalatath's Guile
         sheetTable[6] = GetWeeklyAffixes(2) -- Fortified/Tyranical
-        sheetTable[7] = GetWeeklyAffixes(3) -- Challenger's Peril
-        sheetTable[8] = GetWeeklyAffixes(4) -- Foritified/Tyrannical
+        sheetTable[7] = GetWeeklyAffixes(3) -- Foritified/Tyrannical
+        sheetTable[8] = ''
     else
         sheetTable[5] = ''
         sheetTable[6] = ''
